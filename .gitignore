@@ -1,0 +1,55 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Release]/
+[Releases]/
+x64/
+x86/
+[Ww]in32/
+[Aa]rm/
+[Aa]rm64/
+asmincat/
+bin/
+obj/
+artifacts/
+
+# Visual Studio 2015/2017/2019/2022 cache directory
+.vs/
+
+# JetBrains Rider
+.idea/
+
+# OmniSharp
+.omnisharp/
+
+# Visual Studio Code
+.vscode/
+
+# Node.js
+node_modules/
+dist/
+dist-ssr/
+*.local
+.env.local
+.env.*.local
+
+# Docker / Compose
+.docker/
+
+# Log files
+*.log
+
+# Databases & local tools
+*.db
+*.db-shm
+*.db-wal
+.gemini/

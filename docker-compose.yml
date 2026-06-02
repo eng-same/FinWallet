@@ -1,0 +1,99 @@
+services:
+  finwallet-postgres:
+    image: postgres:16-alpine
+    container_name: finwallet-postgres
+    environment:
+      POSTGRES_USER: finwallet_user
+      POSTGRES_PASSWORD: finwallet_password
+      POSTGRES_DB: finwallet_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U finwallet_user -d finwallet_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - finwallet-network
+
+  finwallet-rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: finwallet-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: finwallet_mq_user
+      RABBITMQ_DEFAULT_PASS: finwallet_mq_password
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - finwallet-network
+
+  finwallet-api:
+    build:
+      context: ./src/backend
+      dockerfile: FinWallet.Api/Dockerfile
+    container_name: finwallet-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=finwallet-postgres;Port=5432;Database=finwallet-db;Username=finwallet_user;Password=finwallet_password
+      - RabbitMq__Host=finwallet-rabbitmq
+      - RabbitMq__Username=finwallet_mq_user
+      - RabbitMq__Password=finwallet_mq_password
+      - Jwt__SecretKey=FinWalletSuperSecretJWTKey2026!WithExtraSecurityCharacters
+      - Jwt__Issuer=FinWallet.Api
+      - Jwt__Audience=FinWallet.Frontend
+      - Jwt__AccessTokenExpirationMinutes=120
+    ports:
+      - "8081:8080"
+    depends_on:
+      finwallet-postgres:
+        condition: service_healthy
+      finwallet-rabbitmq:
+        condition: service_healthy
+    networks:
+      - finwallet-network
+
+  finwallet-mock-bank-core:
+    build:
+      context: ./src/backend
+      dockerfile: FinWallet.MockBankCore.Worker/Dockerfile
+    container_name: finwallet-mock-bank-core
+    environment:
+      - DOTNET_ENVIRONMENT=Development
+      - RabbitMq__Host=finwallet-rabbitmq
+      - RabbitMq__Username=finwallet_mq_user
+      - RabbitMq__Password=finwallet_mq_password
+    depends_on:
+      finwallet-rabbitmq:
+        condition: service_healthy
+    networks:
+      - finwallet-network
+
+  finwallet-frontend:
+    build:
+      context: ./src/frontend/finwallet-web
+      dockerfile: Dockerfile
+    container_name: finwallet-frontend
+    ports:
+      - "9000:80"
+    depends_on:
+      - finwallet-api
+    networks:
+      - finwallet-network
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
+
+networks:
+  finwallet-network:
+    driver: bridge

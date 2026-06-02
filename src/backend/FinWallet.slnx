@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="FinWallet.Api/FinWallet.Api.csproj" />
+  <Project Path="FinWallet.Application/FinWallet.Application.csproj" />
+  <Project Path="FinWallet.Contracts/FinWallet.Contracts.csproj" />
+  <Project Path="FinWallet.Domain/FinWallet.Domain.csproj" />
+  <Project Path="FinWallet.Infrastructure/FinWallet.Infrastructure.csproj" />
+  <Project Path="FinWallet.MockBankCore.Worker/FinWallet.MockBankCore.Worker.csproj" />
+  <Project Path="FinWallet.Tests/FinWallet.Tests.csproj" />
+</Solution>

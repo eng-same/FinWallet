@@ -1,0 +1,8 @@
+# Docker Compose local override configuration
+services:
+  finwallet-api:
+    environment:
+      - ASPNETCORE_LOGGING__LIFETIME__INFORMATION=true
+  finwallet-mock-bank-core:
+    environment:
+      - Logging__LogLevel__Default=Information
