@@ -1,21 +1,23 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useAdminStore } from '../../stores/admin';
 import { useQuasar } from 'quasar';
 
 const adminStore = useAdminStore();
 const $q = useQuasar();
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 
 const searchVal = ref('');
 
-const columns = [
-  { name: 'createdAt', label: 'Timestamp', field: 'createdAt', align: 'left' as const, sortable: true },
-  { name: 'userEmail', label: 'Actor', field: 'userEmail', align: 'left' as const, sortable: true },
-  { name: 'action', label: 'Action', field: 'action', align: 'center' as const, sortable: true },
-  { name: 'description', label: 'Description', field: 'description', align: 'left' as const },
+const columns = computed(() => [
+  { name: 'createdAt', label: t('common.date'), field: 'createdAt', align: 'left' as const, sortable: true },
+  { name: 'userEmail', label: t('common.name'), field: 'userEmail', align: 'left' as const, sortable: true },
+  { name: 'action', label: t('common.action'), field: 'action', align: 'center' as const, sortable: true },
+  { name: 'description', label: t('common.description'), field: 'description', align: 'left' as const },
   { name: 'ipAddress', label: 'IP Address', field: 'ipAddress', align: 'center' as const },
-  { name: 'actions', label: 'Details', field: 'actions', align: 'center' as const }
-];
+  { name: 'actions', label: t('adminAudit.subtitle'), field: 'actions', align: 'center' as const }
+]);
 
 const loadAuditLogs = async () => {
   try {
@@ -51,8 +53,8 @@ onMounted(() => {
     
     <div class="row items-center justify-between q-mb-xl">
       <div>
-        <h4 class="text-h4 text-white text-weight-bolder q-mt-none q-mb-xs">Security & Audit Logs</h4>
-        <p class="text-subtitle1 text-grey-5 text-weight-light">Trace and review administrative actions and platform event records</p>
+        <h4 class="text-h4 text-white text-weight-bolder q-mt-none q-mb-xs">{{ $t('adminAudit.title') }}</h4>
+        <p class="text-subtitle1 text-grey-5 text-weight-light">{{ $t('adminAudit.subtitle') }}</p>
       </div>
       <q-btn flat round color="white" icon="refresh" @click="loadAuditLogs" />
     </div>
@@ -63,7 +65,7 @@ onMounted(() => {
         <div class="col-12 col-sm-6">
           <q-input
             v-model="searchVal"
-            label="Search by Action, Description or Actor Email"
+            :label="$t('common.search')"
             label-color="indigo-3"
             dark
             outlined
@@ -79,7 +81,7 @@ onMounted(() => {
         <div class="col-12 col-sm-2 text-right">
           <q-btn
             color="primary"
-            label="Clear"
+            :label="$t('common.clear')"
             no-caps
             class="w-full q-py-sm"
             @click="() => { searchVal = ''; loadAuditLogs(); }"
@@ -219,7 +221,7 @@ onMounted(() => {
           <template v-slot:no-data>
             <div class="w-full text-center q-pa-xl">
               <q-icon name="security" size="64px" color="grey-7" class="q-mb-md" />
-              <div class="text-subtitle1 text-grey-5">No security or audit logs found matching criteria.</div>
+              <div class="text-subtitle1 text-grey-5">{{ $t('adminAudit.subtitle') }}</div>
             </div>
           </template>
         </q-table>

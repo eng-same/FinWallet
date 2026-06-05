@@ -8,6 +8,8 @@ const route = useRoute();
 const router = useRouter();
 const adminStore = useAdminStore();
 const $q = useQuasar();
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 
 const userId = route.params.id as string;
 const userDetails = ref<any | null>(null);
@@ -35,7 +37,7 @@ const handleFreeze = () => {
       model: '',
       type: 'text',
       required: true,
-      label: 'Freeze Reason'
+      label: t('adminWallets.statusTransition')
     },
     ok: {
       label: 'Freeze',
@@ -142,10 +144,10 @@ onMounted(() => {
                 <div class="text-caption text-grey-5 font-mono q-mb-md">{{ userDetails.user.email }}</div>
 
                 <div class="text-left text-body2 q-gutter-y-sm border-top border-indigo q-pt-md">
-                  <div>Phone: <span class="text-white text-weight-bold">{{ userDetails.user.phoneNumber }}</span></div>
-                  <div>Account: <span class="text-white">{{ userDetails.user.isActive ? 'Active' : 'Deactivated' }}</span></div>
-                  <div>Registered: <span class="text-grey-4">{{ formatDate(userDetails.user.createdAt) }}</span></div>
-                  <div v-if="userDetails.user.lastLoginAt">Last login: <span class="text-grey-4">{{ formatDate(userDetails.user.lastLoginAt) }}</span></div>
+                  <div>{{ $t('common.phone') }}: <span class="text-white text-weight-bold">{{ userDetails.user.phoneNumber }}</span></div>
+                  <div>{{ $t('adminUsers.account') }}: <span class="text-white">{{ userDetails.user.isActive ? 'Active' : 'Deactivated' }}</span></div>
+                  <div>{{ $t('adminUsers.registered') }}: <span class="text-grey-4">{{ formatDate(userDetails.user.createdAt) }}</span></div>
+                  <div v-if="userDetails.user.lastLoginAt">{{ $t('adminUsers.lastLogin') }}: <span class="text-grey-4">{{ formatDate(userDetails.user.lastLoginAt) }}</span></div>
                 </div>
 
                 <q-separator class="bg-grey-9 q-my-lg" />
@@ -173,7 +175,7 @@ onMounted(() => {
                 </div>
                 
                 <div class="text-caption text-grey-5" v-else>
-                  This user has no associated wallet.
+                  {{ $t('adminUsers.noWallet') }}
                 </div>
 
               </q-card-section>
@@ -188,16 +190,16 @@ onMounted(() => {
               <q-card class="glass-card" v-if="userDetails.wallet">
                 <q-card-section class="q-pa-lg">
                   <div class="text-caption text-indigo-3 font-mono text-uppercase text-weight-bold letter-spacing-1 q-mb-xs">
-                    Wallet Telemetry
+                    {{ $t('adminUsers.walletTelemetry') }}
                   </div>
 
                   <div class="row items-center justify-between">
                     <div>
-                      <div class="text-caption text-grey-5">Wallet Number</div>
+                      <div class="text-caption text-grey-5">{{ $t('dashboard.walletNumber') }}</div>
                       <div class="text-subtitle1 font-mono text-white text-weight-bold">{{ userDetails.wallet.walletNumber }}</div>
                     </div>
                     <div class="text-right">
-                      <div class="text-caption text-grey-5">Balance</div>
+                      <div class="text-caption text-grey-5">{{ $t('adminUsers.balance') }}</div>
                       <div class="text-h6 text-white text-weight-bolder">
                         {{ userDetails.wallet.balance.toFixed(3) }}
                         <span class="text-caption text-indigo-3">LYD</span>
@@ -207,7 +209,7 @@ onMounted(() => {
 
                   <div class="q-mt-md border-top border-indigo q-pt-md row justify-between items-center">
                     <div>
-                      <span class="text-caption text-grey-5 mr-xs">Status: </span>
+                      <span class="text-caption text-grey-5 mr-xs">{{ $t('common.status') }}: </span>
                       <q-badge :color="userDetails.wallet.status === 'Active' ? 'secondary' : 'negative'" class="text-bold">
                         {{ userDetails.wallet.status }}
                       </q-badge>
@@ -223,7 +225,7 @@ onMounted(() => {
               <q-card class="glass-card">
                 <q-card-section class="q-pa-md">
                   <div class="text-subtitle2 text-indigo-3 font-mono text-uppercase text-weight-bold letter-spacing-1">
-                    Recent Wallet Activities
+                    {{ $t('adminUsers.recentActivities') }}
                   </div>
                 </q-card-section>
                 

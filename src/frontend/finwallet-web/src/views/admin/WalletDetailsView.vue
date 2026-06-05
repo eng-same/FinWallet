@@ -8,6 +8,8 @@ const route = useRoute();
 const router = useRouter();
 const adminStore = useAdminStore();
 const $q = useQuasar();
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 
 const walletId = route.params.id as string;
 const wDetails = ref<any | null>(null);
@@ -35,7 +37,7 @@ const handleFreeze = () => {
       model: '',
       type: 'text',
       required: true,
-      label: 'Freeze Reason'
+      label: t('adminWallets.statusTransition')
     },
     ok: {
       label: 'Freeze',
@@ -132,7 +134,7 @@ onMounted(() => {
                 </div>
 
                 <div class="text-left text-body2 q-gutter-y-sm border-top border-indigo q-pt-md">
-                  <div>Owner Email: <span class="text-white font-mono text-caption">{{ wDetails.owner.email }}</span></div>
+                  <div>{{ $t('adminUsers.ownerEmail') }}: <span class="text-white font-mono text-caption">{{ wDetails.owner.email }}</span></div>
                   <div>
                     Status: 
                     <q-badge :color="wDetails.wallet.status === 'Active' ? 'secondary' : 'negative'" class="text-bold">
@@ -142,7 +144,7 @@ onMounted(() => {
                   <div v-if="wDetails.wallet.status === 'Frozen'" class="text-red-3 font-italic text-bold q-mt-xs">
                     "{{ wDetails.wallet.frozenReason }}"
                   </div>
-                  <div>Created: <span class="text-grey-4">{{ formatDate(wDetails.wallet.createdAt) }}</span></div>
+                  <div>{{ $t('adminUsers.created') }}: <span class="text-grey-4">{{ formatDate(wDetails.wallet.createdAt) }}</span></div>
                 </div>
 
                 <q-separator class="bg-grey-9 q-my-lg" />
@@ -178,7 +180,7 @@ onMounted(() => {
             <q-card class="glass-card fit">
               <q-card-section class="q-pa-md">
                 <div class="text-subtitle2 text-indigo-3 font-mono text-uppercase text-weight-bold letter-spacing-1">
-                  Status Transition Audit Logs
+                  {{ $t('adminWallets.statusTransition') }}
                 </div>
               </q-card-section>
 

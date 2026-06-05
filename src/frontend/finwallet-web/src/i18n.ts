@@ -20,7 +20,27 @@ const messages = {
     common: {
       refresh: 'Refresh',
       status: 'Status',
-      lyd: 'LYD'
+      lyd: 'LYD',
+      amount: 'Amount',
+      date: 'Date',
+      type: 'Type',
+      description: 'Description',
+      email: 'Email',
+      name: 'Name',
+      password: 'Password',
+      role: 'Role',
+      action: 'Action',
+      search: 'Search',
+      filter: 'Filter',
+      clear: 'Clear',
+      cancel: 'Cancel',
+      confirm: 'Confirm',
+      save: 'Save',
+      netFlow: 'Net Flow',
+      wallet: 'Wallet',
+      from: 'From',
+      to: 'To',
+      phone: 'Phone'
     },
     dashboard: {
       welcome: 'Welcome back, {name}!',
@@ -78,6 +98,118 @@ const messages = {
       lyPayHint: 'Enter 25-character Libyan IBAN starting with LY',
       successTitleTopup: 'Top-Up Request Submitted',
       successMessageTopup: 'Your top-up has been successfully processed!'
+    },
+    adminDashboard: {
+      title: 'Administration Dashboard',
+      subtitle: 'Real-time system telemetry and transaction auditing',
+      totalUsers: 'Total Users',
+      totalWallets: 'Total Wallets',
+      totalVolume: 'Total Volume',
+      todayVolume: 'Today\'s Volume',
+      walletStatusRatio: 'Wallet Status Ratio',
+      globalActivity: 'Global Platform Activity',
+      noTx: 'No system transactions recorded.',
+      loading: 'Loading dashboard telemetry...'
+    },
+    adminUsers: {
+      title: 'User Management',
+      subtitle: 'Monitor platform registrants and access detail states',
+      account: 'Account',
+      registered: 'Registered',
+      lastLogin: 'Last login',
+      noWallet: 'This user has no associated wallet.',
+      ownerEmail: 'Owner Email',
+      created: 'Created',
+      walletTelemetry: 'Wallet Telemetry',
+      balance: 'Balance',
+      recentActivities: 'Recent Wallet Activities',
+      noUsers: 'No matching users found in the system.',
+      activeUser: 'Active User',
+      deactivated: 'Deactivated',
+      loading: 'Querying users...',
+      search: 'Search by Name / Email / Phone'
+    },
+    adminWallets: {
+      title: 'Wallet Registry',
+      subtitle: 'Monitor wallet balances, owners, and freeze logs',
+      statusTransition: 'Status Transition Audit Logs',
+      noWallets: 'No matching wallets found in the system.',
+      activeWallet: 'Active Wallet',
+      frozenWallet: 'Frozen Wallet',
+      loading: 'Querying wallets...',
+      search: 'Search by Wallet Number / Owner Email'
+    },
+    adminTx: {
+      title: 'Global Ledger Activity',
+      subtitle: 'Inspect and audit all transaction flows in the platform',
+      initiator: 'Initiator',
+      bankRef: 'Bank Reference',
+      rejectionReason: 'Rejection Reason',
+      referenceNumber: 'Reference Number',
+      doubleLedger: 'Double-Ledger Audit Entries',
+      refreshBtn: 'Refresh status from Bank response'
+    },
+    adminAudit: {
+      title: 'Security & Audit Logs',
+      subtitle: 'Trace and review administrative actions and platform event records'
+    },
+    auth: {
+      loginTitle: 'Sign In',
+      loginSubtitle: 'Access your digital wallet system',
+      dontHaveAccount: 'Don\'t have an account?',
+      signUp: 'Sign Up',
+      registerTitle: 'Create Account',
+      registerSubtitle: 'Get a digital wallet automatically',
+      fullName: 'Full Name',
+      nationalId: 'National ID',
+      alreadyHaveAccount: 'Already have an account?'
+    },
+    landing: {
+      academicProject: 'ACADEMIC FINTECH PROJECT 2026',
+      experience: 'Experience Next-Gen Banking with',
+      finwallet: 'FinWallet',
+      description: 'A high-fidelity fintech platform. Register user accounts, manage digital wallets, top up balances, perform instant peer-to-peer transfers, and monitor platform metrics.',
+      digitalWalletTitle: 'Digital Wallet',
+      digitalWalletDesc: 'Every user receives an active wallet upon registration. View transactions and download digital receipts instantly.',
+      instantTransfersTitle: 'Instant Transfers',
+      instantTransfersDesc: 'Transfer LYD balances peer-to-peer synchronously with transaction auditing, atomic updates, and double ledger logging.',
+      bankCoreTitle: 'Bank Core',
+      bankCoreDesc: 'Initiate balance top-ups processed via RabbitMQ. External core accepts/rejects top-ups asynchronously.',
+      getStarted: 'Get started',
+      github: 'GitHub'
+    },
+    errors: {
+      notFoundTitle: 'Page Not Found',
+      notFoundDesc: 'The page you are looking for does not exist or has been moved.',
+      serverErrorTitle: 'Server Error',
+      serverErrorDesc: 'Something went wrong on the server. Please try again later.',
+      unauthorizedTitle: 'Access Denied',
+      unauthorizedDesc: 'You do not have the required permissions to view this resource.',
+      returnHome: 'Return to Home'
+    },
+    profile: {
+      userId: 'User ID',
+      phoneNumber: 'Phone Number',
+      accessRole: 'Access Role',
+      accountCreated: 'Account Created',
+      lastSignIn: 'Last Sign In'
+    },
+    receipt: {
+      paid: 'PAID',
+      platform: 'FINWALLET PLATFORM',
+      officialReceipt: 'OFFICIAL TRANSACTION RECEIPT',
+      receiptNum: 'Receipt Number',
+      txDate: 'Transaction Date',
+      senderWallet: 'Sender Wallet',
+      recipientWallet: 'Recipient Wallet',
+      initiatedBy: 'Initiated By',
+      totalAmount: 'Total Amount',
+      secureVerified: 'FinWallet Digital receipt. Secure and Verified.',
+      generating: 'Generating Receipt...'
+    },
+    history: {
+      title: 'Transaction History',
+      subtitle: 'Filter, track and inspect all wallet activities'
     }
   },
   ar: {
@@ -99,7 +231,27 @@ const messages = {
     common: {
       refresh: 'تحديث البيانات',
       status: 'حالة العملية',
-      lyd: 'د.ل'
+      lyd: 'د.ل',
+      amount: 'القيمة',
+      date: 'التاريخ',
+      type: 'النوع',
+      description: 'الوصف',
+      email: 'البريد الإلكتروني',
+      name: 'الاسم',
+      password: 'كلمة المرور',
+      role: 'الصلاحية',
+      action: 'الإجراء',
+      search: 'بحث',
+      filter: 'تصفية',
+      clear: 'مسح',
+      cancel: 'إلغاء',
+      confirm: 'تأكيد',
+      save: 'حفظ',
+      netFlow: 'صافي التدفقات',
+      wallet: 'المحفظة',
+      from: 'من',
+      to: 'إلى',
+      phone: 'رقم الهاتف'
     },
     dashboard: {
       welcome: 'مرحباً بك مجدداً، {name}!',
@@ -157,6 +309,118 @@ const messages = {
       lyPayHint: 'مثال: LY متبوعاً بـ ٢٣ رقماً',
       successTitleTopup: 'تم استلام طلب التعبئة بنجاح',
       successMessageTopup: 'تمت معالجة وإضافة الرصيد إلى محفظتك بنجاح!'
+    },
+    adminDashboard: {
+      title: 'لوحة تحكم الإدارة',
+      subtitle: 'مراقبة فورية للنظام وتدقيق العمليات',
+      totalUsers: 'إجمالي المستخدمين',
+      totalWallets: 'إجمالي المحافظ',
+      totalVolume: 'حجم التداول الكلي',
+      todayVolume: 'حجم التداول اليوم',
+      walletStatusRatio: 'نسبة حالة المحافظ',
+      globalActivity: 'نشاط المنصة العام',
+      noTx: 'لم تسجل أي حركات مالية في النظام.',
+      loading: 'جاري تحميل بيانات لوحة القيادة...'
+    },
+    adminUsers: {
+      title: 'إدارة المستخدمين',
+      subtitle: 'مراقبة المسجلين في المنصة وتفاصيل الوصول',
+      account: 'الحساب',
+      registered: 'تاريخ التسجيل',
+      lastLogin: 'آخر تسجيل دخول',
+      noWallet: 'هذا المستخدم ليس لديه محفظة مرتبطة.',
+      ownerEmail: 'البريد الإلكتروني للمالك',
+      created: 'تاريخ الإنشاء',
+      walletTelemetry: 'بيانات المحفظة',
+      balance: 'الرصيد',
+      recentActivities: 'أحدث نشاطات المحفظة',
+      noUsers: 'لم يتم العثور على مستخدمين مطابقيين.',
+      activeUser: 'مستخدم نشط',
+      deactivated: 'حساب معطل',
+      loading: 'جاري الاستعلام عن المستخدمين...',
+      search: 'البحث بالاسم / البريد / الهاتف'
+    },
+    adminWallets: {
+      title: 'سجل المحافظ',
+      subtitle: 'مراقبة أرصدة المحافظ، والملاك، وسجلات التجميد',
+      statusTransition: 'سجلات تدقيق تغيير الحالة',
+      noWallets: 'لم يتم العثور على محافظ مطابقة.',
+      activeWallet: 'محفظة نشطة',
+      frozenWallet: 'محفظة مجمدة',
+      loading: 'جاري الاستعلام عن المحافظ...',
+      search: 'البحث برقم المحفظة / بريد المالك'
+    },
+    adminTx: {
+      title: 'نشاط دفتر الأستاذ العام',
+      subtitle: 'فحص وتدقيق جميع مسارات التحويل في المنصة',
+      initiator: 'المنشئ',
+      bankRef: 'المرجع البنكي',
+      rejectionReason: 'سبب الرفض',
+      referenceNumber: 'الرقم المرجعي',
+      doubleLedger: 'قيود تدقيق دفتر الأستاذ المزدوج',
+      refreshBtn: 'تحديث الحالة من رد البنك'
+    },
+    adminAudit: {
+      title: 'سجلات الأمان والتدقيق',
+      subtitle: 'تتبع ومراجعة الإجراءات الإدارية وسجلات أحداث المنصة'
+    },
+    auth: {
+      loginTitle: 'تسجيل الدخول',
+      loginSubtitle: 'الوصول إلى نظام المحفظة الرقمية الخاصة بك',
+      dontHaveAccount: 'ليس لديك حساب؟',
+      signUp: 'إنشاء حساب',
+      registerTitle: 'إنشاء حساب جديد',
+      registerSubtitle: 'احصل على محفظة رقمية تلقائياً',
+      fullName: 'الاسم الكامل',
+      nationalId: 'الرقم الوطني',
+      alreadyHaveAccount: 'لديك حساب بالفعل؟'
+    },
+    landing: {
+      academicProject: 'مشروع تقنية مالية أكاديمي 2026',
+      experience: 'اختبر الجيل القادم من الخدمات المصرفية مع',
+      finwallet: 'finwallet',
+      description: 'منصة تقنية مالية متطورة. سجل حسابك، أدر محفظتك الرقمية، اشحن رصيدك، قم بتحويلات فورية، وراقب مؤشرات المنصة.',
+      digitalWalletTitle: 'المحفظة الرقمية',
+      digitalWalletDesc: 'يحصل كل مستخدم على محفظة نشطة عند التسجيل. استعرض معاملاتك وحمل الإيصالات الرقمية فوراً.',
+      instantTransfersTitle: 'تحويلات فورية',
+      instantTransfersDesc: 'حول الأرصدة فورياً ومزامنةً بين الأفراد مع تدقيق العمليات، التحديثات الذرية، وتسجيل دفتر الأستاذ المزدوج.',
+      bankCoreTitle: 'نظام البنك المركزي',
+      bankCoreDesc: 'ابدأ عمليات الشحن لتتم معالجتها عبر نظام RabbitMQ. يقبل/يرفض النظام المصرفي الشحن بشكل غير متزامن.',
+      getStarted: 'ابدأ الآن',
+      github: 'جيت هاب'
+    },
+    errors: {
+      notFoundTitle: 'الصفحة غير موجودة',
+      notFoundDesc: 'الصفحة التي تبحث عنها غير موجودة أو تم نقلها.',
+      serverErrorTitle: 'خطأ في الخادم',
+      serverErrorDesc: 'حدث خطأ ما في الخادم. يرجى المحاولة لاحقاً.',
+      unauthorizedTitle: 'تم رفض الوصول',
+      unauthorizedDesc: 'ليس لديك الصلاحيات المطلوبة لعرض هذه الصفحة.',
+      returnHome: 'العودة للرئيسية'
+    },
+    profile: {
+      userId: 'رقم المستخدم',
+      phoneNumber: 'رقم الهاتف',
+      accessRole: 'صلاحية الوصول',
+      accountCreated: 'تاريخ إنشاء الحساب',
+      lastSignIn: 'آخر تسجيل دخول'
+    },
+    receipt: {
+      paid: 'مدفوع',
+      platform: 'منصة ',
+      officialReceipt: 'إيصال معاملة رسمي',
+      receiptNum: 'رقم الإيصال',
+      txDate: 'تاريخ المعاملة',
+      senderWallet: 'محفظة المرسل',
+      recipientWallet: 'محفظة المستلم',
+      initiatedBy: 'بواسطة',
+      totalAmount: 'القيمة الإجمالية',
+      secureVerified: 'إيصال finwallet الرقمي. آمن وموثق.',
+      generating: 'جاري إصدار الإيصال...'
+    },
+    history: {
+      title: 'سجل المعاملات',
+      subtitle: 'تصفية، وتتبع وفحص كافة نشاطات المحفظة'
     }
   }
 };
@@ -171,4 +435,3 @@ const i18n = createI18n({
 });
 
 export default i18n;
-

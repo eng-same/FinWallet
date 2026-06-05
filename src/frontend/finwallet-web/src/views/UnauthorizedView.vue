@@ -22,9 +22,9 @@ const goHome = () => {
   <q-page class="flex flex-center text-center q-pa-lg">
     <div>
       <q-icon name="gpp_bad" size="120px" color="negative" class="q-mb-md" />
-      <h3 class="text-h3 text-white text-weight-bolder q-mt-none q-mb-sm">Access Denied</h3>
+      <h3 class="text-h3 text-white text-weight-bolder q-mt-none q-mb-sm">{{ $t('errors.unauthorizedTitle') }}</h3>
       <p class="text-subtitle1 text-grey-5 q-mb-xl">
-        You do not have the required permissions to view this resource.
+        {{ $t('errors.unauthorizedDesc') }}
       </p>
       <q-btn color="primary" label="Go to Dashboard" size="lg" no-caps class="q-px-xl hover-scale" @click="goHome" />
     </div>

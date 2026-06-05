@@ -33,12 +33,12 @@ const navigateToDashboard = () => {
         <div class="text-h3 text-weight-bolder q-mb-md letter-spacing-1">
           Experience Next-Gen Banking with
         </div>
-        <span class="text-transparent bg-clip-text bg-gradient-indigo">FinWallet</span>
+        <span class="text-transparent bg-clip-text bg-gradient-indigo">{{ $t('landing.finwallet') }}</span>
       </h1>
 
       <!-- Description -->
       <p class="text-subtitle1 text-grey-4 max-w-2xl mx-auto q-mb-xl text-weight-light animate-fade-up" style="line-height: 1.8;">
-        A high-fidelity fintech platform. Register user accounts, manage digital wallets, top up balances, perform instant peer-to-peer transfers, and monitor platform metrics.
+        {{ $t('landing.description') }}
       </p>
 
       <!-- CTA Buttons -->
@@ -73,9 +73,9 @@ const navigateToDashboard = () => {
               <q-avatar color="indigo-10" text-color="indigo-3" class="q-mb-md">
                 <q-icon name="account_balance_wallet" size="28px" />
               </q-avatar>
-              <div class="text-h6 text-white text-weight-bold q-mb-sm">Digital Wallet</div>
+              <div class="text-h6 text-white text-weight-bold q-mb-sm">{{ $t('landing.digitalWalletTitle') }}</div>
               <div class="text-body2 text-grey-5">
-                Every user receives an active wallet upon registration. View transactions and download digital receipts instantly.
+                {{ $t('landing.digitalWalletDesc') }}
               </div>
             </q-card-section>
           </q-card>
@@ -87,9 +87,9 @@ const navigateToDashboard = () => {
               <q-avatar color="emerald-10" text-color="emerald-3" class="q-mb-md">
                 <q-icon name="swap_horiz" size="28px" />
               </q-avatar>
-              <div class="text-h6 text-white text-weight-bold q-mb-sm">Instant Transfers</div>
+              <div class="text-h6 text-white text-weight-bold q-mb-sm">{{ $t('landing.instantTransfersTitle') }}</div>
               <div class="text-body2 text-grey-5">
-                Transfer LYD balances peer-to-peer synchronously with transaction auditing, atomic updates, and double ledger logging.
+                {{ $t('landing.instantTransfersDesc') }}
               </div>
             </q-card-section>
           </q-card>
@@ -101,9 +101,9 @@ const navigateToDashboard = () => {
               <q-avatar color="amber-10" text-color="amber-3" class="q-mb-md">
                 <q-icon name="settings_input_component" size="28px" />
               </q-avatar>
-              <div class="text-h6 text-white text-weight-bold q-mb-sm">Bank Core</div>
+              <div class="text-h6 text-white text-weight-bold q-mb-sm">{{ $t('landing.bankCoreTitle') }}</div>
               <div class="text-body2 text-grey-5">
-                Initiate balance top-ups processed via RabbitMQ. External core accepts/rejects top-ups asynchronously.
+                {{ $t('landing.bankCoreDesc') }}
               </div>
             </q-card-section>
           </q-card>

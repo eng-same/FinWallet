@@ -78,13 +78,13 @@ onMounted(() => {
           <div class="text-weight-bolder text-subtitle1 font-mono text-indigo-4 letter-spacing-1 q-mb-xs">
             FINWALLET PLATFORM
           </div>
-          <div class="text-caption text-grey-5 font-mono">OFFICIAL TRANSACTION RECEIPT</div>
+          <div class="text-caption text-grey-5 font-mono">{{ $t('receipt.officialReceipt') }}</div>
           
           <q-separator class="bg-grey-9 q-my-lg" />
 
           <!-- Receipt Details -->
           <div class="q-mb-md">
-            <div class="text-caption text-grey-5">Receipt Number</div>
+            <div class="text-caption text-grey-5">{{ $t('receipt.receiptNum') }}</div>
             <div class="text-weight-bold text-subtitle2 font-mono text-white">
               {{ receipt.receiptNumber }}
             </div>
@@ -92,36 +92,36 @@ onMounted(() => {
 
           <div class="q-mb-lg row justify-between text-left text-body2">
             <div class="col-12 q-mb-sm">
-              <span class="text-grey-5 block">Transaction Date</span>
+              <span class="text-grey-5 block">{{ $t('receipt.txDate') }}</span>
               <span class="text-weight-bold text-white">{{ formatDate(receipt.issuedAt) }}</span>
             </div>
 
             <div class="col-12 q-mb-sm" v-if="receipt.fromWalletNumber">
-              <span class="text-grey-5 block">Sender Wallet</span>
+              <span class="text-grey-5 block">{{ $t('receipt.senderWallet') }}</span>
               <span class="text-weight-bold text-white font-mono">{{ receipt.fromWalletNumber }}</span>
             </div>
 
             <div class="col-12 q-mb-sm" v-if="receipt.toWalletNumber">
-              <span class="text-grey-5 block">Recipient Wallet</span>
+              <span class="text-grey-5 block">{{ $t('receipt.recipientWallet') }}</span>
               <span class="text-weight-bold text-white font-mono">{{ receipt.toWalletNumber }}</span>
             </div>
 
             <div class="col-12 q-mb-sm">
-              <span class="text-grey-5 block">Initiated By</span>
+              <span class="text-grey-5 block">{{ $t('receipt.initiatedBy') }}</span>
               <span class="text-weight-bold text-white">{{ receipt.initiatedByFullName }}</span>
             </div>
 
             <div class="col-12 q-mb-sm" v-if="receipt.description">
-              <span class="text-grey-5 block">Description / Memo</span>
+              <span class="text-grey-5 block">{{ $t('send.memo') }}</span>
               <span class="text-grey-4 text-italic">"{{ receipt.description }}"</span>
             </div>
           </div>
 
           <q-separator class="bg-grey-9 q-my-lg" />
 
-          <!-- Total Amount -->
+          <!-- {{ $t('receipt.totalAmount') }} -->
           <div class="q-py-md bg-grey-10-dim rounded-borders">
-            <div class="text-caption text-grey-5 text-uppercase letter-spacing-1">Total Amount</div>
+            <div class="text-caption text-grey-5 text-uppercase letter-spacing-1">{{ $t('receipt.totalAmount') }}</div>
             <div class="text-h3 text-weight-bolder text-emerald-4">
               {{ receipt.amount.toFixed(3) }}
               <span class="text-subtitle1 text-grey-4 text-weight-medium">LYD</span>
@@ -129,7 +129,7 @@ onMounted(() => {
           </div>
 
           <div class="q-mt-xl text-caption text-grey-6 font-mono border-top q-pt-md">
-            FinWallet Digital receipt. Secure and Verified.
+            {{ $t('receipt.secureVerified') }}
           </div>
 
         </q-card-section>
@@ -138,7 +138,7 @@ onMounted(() => {
       <!-- Loading skeleton -->
       <q-card class="glass-card q-pa-lg text-center" v-else>
         <q-spinner color="primary" size="48px" class="q-my-xl" />
-        <div class="text-grey-5">Generating Receipt...</div>
+        <div class="text-grey-5">{{ $t('receipt.generating') }}</div>
       </q-card>
 
     </div>

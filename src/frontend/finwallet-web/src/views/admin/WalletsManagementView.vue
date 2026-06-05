@@ -33,8 +33,8 @@ onMounted(() => {
     
     <div class="row items-center justify-between q-mb-xl">
       <div>
-        <h4 class="text-h4 text-white text-weight-bolder q-mt-none q-mb-xs">Wallet Registry</h4>
-        <p class="text-subtitle1 text-grey-5 text-weight-light">Monitor wallet balances, owners, and freeze logs</p>
+        <h4 class="text-h4 text-white text-weight-bolder q-mt-none q-mb-xs">{{ $t('adminWallets.title') }}</h4>
+        <p class="text-subtitle1 text-grey-5 text-weight-light">{{ $t('adminWallets.subtitle') }}</p>
       </div>
       <q-btn flat round color="white" icon="refresh" @click="loadWallets" />
     </div>
@@ -99,14 +99,14 @@ onMounted(() => {
       <!-- No wallets state -->
       <div class="col-12 text-center q-pa-xl text-grey-5" v-if="adminStore.wallets.length === 0">
         <q-icon name="wallet" size="64px" class="q-mb-md" />
-        <div>No matching wallets found in the system.</div>
+        <div>{{ $t('adminWallets.noWallets') }}</div>
       </div>
     </div>
 
     <!-- Loader -->
     <div class="text-center q-pa-xl" v-else>
       <q-spinner color="primary" size="48px" />
-      <div class="text-grey-5 q-mt-md">Querying wallets...</div>
+      <div class="text-grey-5 q-mt-md">{{ $t('adminWallets.loading') }}</div>
     </div>
 
   </q-page>

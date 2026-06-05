@@ -163,7 +163,7 @@ const handleSendMoneySubmit = async () => {
                 v-model="recipientWallet"
                 type="text"
                 :label="$t('send.recipientNum')"
-                placeholder="e.g. FW-2026-000002"
+                :placeholder="'FW-2026-000002'"
                 label-color="indigo-3"
                 dark
                 outlined
@@ -238,7 +238,7 @@ const handleSendMoneySubmit = async () => {
                 dark
                 outlined
                 rows="3"
-                :placeholder="locale === 'en' ? 'Enter transfer details or memo' : 'أدخل بياناً لعملية التحويل'"
+                :placeholder="$t('send.memo')"
               >
                 <template v-slot:prepend>
                   <q-icon name="description" color="indigo-4" />

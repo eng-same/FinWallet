@@ -43,29 +43,29 @@ const formatDate = (dateStr: string) => {
           <div class="text-left text-body2 q-gutter-y-md">
             
             <div class="row justify-between">
-              <span class="text-grey-5">User ID</span>
+              <span class="text-grey-5">{{ $t('profile.userId') }}</span>
               <span class="font-mono text-white text-caption">{{ authStore.user?.id }}</span>
             </div>
 
             <div class="row justify-between">
-              <span class="text-grey-5">Phone Number</span>
+              <span class="text-grey-5">{{ $t('profile.phoneNumber') }}</span>
               <span class="text-white text-weight-bold">{{ authStore.user?.phoneNumber }}</span>
             </div>
 
             <div class="row justify-between">
-              <span class="text-grey-5">Access Role</span>
+              <span class="text-grey-5">{{ $t('profile.accessRole') }}</span>
               <q-badge color="secondary" text-color="white" class="text-bold">
                 {{ authStore.role }}
               </q-badge>
             </div>
 
             <div class="row justify-between">
-              <span class="text-grey-5">Account Created</span>
+              <span class="text-grey-5">{{ $t('profile.accountCreated') }}</span>
               <span class="text-white text-weight-bold">{{ formatDate(authStore.user?.createdAt || '') }}</span>
             </div>
 
             <div class="row justify-between" v-if="authStore.user?.lastLoginAt">
-              <span class="text-grey-5">Last Sign In</span>
+              <span class="text-grey-5">{{ $t('profile.lastSignIn') }}</span>
               <span class="text-white text-weight-bold">{{ formatDate(authStore.user?.lastLoginAt || '') }}</span>
             </div>
 

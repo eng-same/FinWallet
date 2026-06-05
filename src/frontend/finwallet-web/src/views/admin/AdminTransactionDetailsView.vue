@@ -69,7 +69,7 @@ onMounted(() => {
           dense
           color="white"
           icon="sync"
-          label="Refresh"
+          :label="$t('common.refresh')"
           no-caps
           :loading="loading"
           @click="loadDetails"
@@ -106,46 +106,46 @@ onMounted(() => {
           <!-- Grid details -->
           <div class="row q-col-gutter-y-md q-mb-lg text-body2">
             <div class="col-6">
-              <span class="text-grey-5 block">Amount</span>
+              <span class="text-grey-5 block">{{ $t('common.amount') }}</span>
               <span class="text-subtitle1 text-weight-bolder text-white font-sans">
                 {{ txDetails.transaction.amount.toFixed(3) }} {{ txDetails.transaction.currency }}
               </span>
             </div>
             
             <div class="col-6">
-              <span class="text-grey-5 block">Date / Time</span>
+              <span class="text-grey-5 block">{{ $t('common.date') }}</span>
               <span class="text-weight-bold text-white">{{ formatDate(txDetails.transaction.createdAt) }}</span>
             </div>
 
             <div class="col-6" v-if="txDetails.transaction.fromWalletNumber">
-              <span class="text-grey-5 block">From Wallet</span>
+              <span class="text-grey-5 block">{{ $t('common.from') }} {{ $t('common.wallet') }}</span>
               <span class="text-weight-bold text-white font-mono">{{ txDetails.transaction.fromWalletNumber }}</span>
             </div>
 
             <div class="col-6" v-if="txDetails.transaction.toWalletNumber">
-              <span class="text-grey-5 block">To Wallet</span>
+              <span class="text-grey-5 block">{{ $t('common.to') }} {{ $t('common.wallet') }}</span>
               <span class="text-weight-bold text-white font-mono">{{ txDetails.transaction.toWalletNumber }}</span>
             </div>
 
             <div class="col-6">
-              <span class="text-grey-5 block">Initiator</span>
+              <span class="text-grey-5 block">{{ $t('adminTx.initiator') }}</span>
               <span class="text-weight-bold text-white">{{ txDetails.transaction.initiatedByFullName }}</span>
             </div>
 
             <div class="col-6" v-if="txDetails.transaction.bankReference">
-              <span class="text-grey-5 block">Bank Reference</span>
+              <span class="text-grey-5 block">{{ $t('adminTx.bankRef') }}</span>
               <span class="text-weight-bold text-indigo-3 font-mono">{{ txDetails.transaction.bankReference }}</span>
             </div>
 
             <div class="col-12" v-if="txDetails.transaction.rejectionReason">
-              <span class="text-grey-5 block">Rejection Reason</span>
+              <span class="text-grey-5 block">{{ $t('adminTx.rejectionReason') }}</span>
               <q-banner dense rounded class="bg-red-10-dim text-red-2 text-bold border-left-red q-mt-xs">
                 {{ txDetails.transaction.rejectionReason }}
               </q-banner>
             </div>
 
             <div class="col-12" v-if="txDetails.transaction.description">
-              <span class="text-grey-5 block">Memo / Description</span>
+              <span class="text-grey-5 block">{{ $t('send.memo') }}</span>
               <span class="text-grey-3">{{ txDetails.transaction.description }}</span>
             </div>
           </div>
@@ -171,7 +171,7 @@ onMounted(() => {
 
                   <q-item-section>
                     <q-item-label class="text-weight-bold text-white row items-center">
-                      Wallet: <span class="font-mono text-indigo-3 q-ml-xs">{{ le.walletNumber }}</span>
+                      {{ $t('common.wallet') }}: <span class="font-mono text-indigo-3 q-ml-xs">{{ le.walletNumber }}</span>
                     </q-item-label>
                     <q-item-label caption class="text-grey-5">
                       Before: {{ le.balanceBefore.toFixed(3) }} | After: {{ le.balanceAfter.toFixed(3) }} {{ le.currency }}

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useAdminStore } from '../../stores/admin';
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
@@ -7,18 +7,20 @@ import { useQuasar } from 'quasar';
 const adminStore = useAdminStore();
 const router = useRouter();
 const $q = useQuasar();
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 
 const typeFilter = ref('');
 const statusFilter = ref('');
 const searchQuery = ref('');
 
-const columns = [
-  { name: 'referenceNumber', label: 'Reference Number', field: 'referenceNumber', align: 'left' as const, sortable: true },
-  { name: 'type', label: 'Type', field: 'type', align: 'center' as const },
-  { name: 'amount', label: 'Amount', field: 'amount', align: 'right' as const, sortable: true },
-  { name: 'status', label: 'Status', field: 'status', align: 'center' as const },
-  { name: 'createdAt', label: 'Date', field: 'createdAt', align: 'center' as const, sortable: true },
-];
+const columns = computed(() => [
+  { name: 'referenceNumber', label: t('adminTx.referenceNumber'), field: 'referenceNumber', align: 'left' as const, sortable: true },
+  { name: 'type', label: t('common.type'), field: 'type', align: 'center' as const },
+  { name: 'amount', label: t('common.amount'), field: 'amount', align: 'right' as const, sortable: true },
+  { name: 'status', label: t('common.status'), field: 'status', align: 'center' as const },
+  { name: 'createdAt', label: t('common.date'), field: 'createdAt', align: 'center' as const, sortable: true }
+]);
 
 const loadTransactions = async () => {
   try {
@@ -65,8 +67,8 @@ onMounted(() => {
     
     <div class="row items-center justify-between q-mb-xl">
       <div>
-        <h4 class="text-h4 text-white text-weight-bolder q-mt-none q-mb-xs">Global Ledger Activity</h4>
-        <p class="text-subtitle1 text-grey-5 text-weight-light">Inspect and audit all transaction flows in the platform</p>
+        <h4 class="text-h4 text-white text-weight-bolder q-mt-none q-mb-xs">{{ $t('adminTx.title') }}</h4>
+        <p class="text-subtitle1 text-grey-5 text-weight-light">{{ $t('adminTx.subtitle') }}</p>
       </div>
       <q-btn flat round color="white" icon="refresh" @click="loadTransactions" />
     </div>
@@ -96,7 +98,7 @@ onMounted(() => {
           <q-select
             v-model="typeFilter"
             :options="['', 'TopUp', 'Transfer']"
-            label="Type"
+            :label="$t('common.type')"
             label-color="indigo-3"
             dark
             outlined
@@ -109,7 +111,7 @@ onMounted(() => {
           <q-select
             v-model="statusFilter"
             :options="['', 'Created', 'PendingBankApproval', 'Completed', 'Rejected', 'Failed']"
-            label="Status"
+            :label="$t('common.status')"
             label-color="indigo-3"
             dark
             outlined

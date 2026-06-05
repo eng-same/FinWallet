@@ -216,7 +216,7 @@ onMounted(() => {
               <!-- Net Flow Indicator -->
               <div class="net-flow-section q-mb-md">
                 <div class="row items-center justify-between q-mb-xs">
-                  <span class="text-caption text-grey-5">Net Flow</span>
+                  <span class="text-caption text-grey-5">{{ $t('common.netFlow') }}</span>
                   <span class="text-caption text-weight-bold" :class="netFlow >= 0 ? 'text-green-4' : 'text-red-4'">
                     {{ netFlow >= 0 ? '+' : '' }}{{ netFlow.toFixed(3) }} {{ $t('common.lyd') }}
                   </span>

@@ -60,8 +60,8 @@ const handleLogin = async () => {
         <q-avatar size="64px" color="indigo-10" class="q-mb-md shadow-5 hover-scale" @click="router.push('/')">
           <q-icon name="account_balance_wallet" size="32px" color="white" />
         </q-avatar>
-        <h2 class="text-h4 text-white text-weight-bolder q-mt-none q-mb-xs">Sign In</h2>
-        <p class="text-subtitle2 text-grey-5">Access your digital wallet system</p>
+        <h2 class="text-h4 text-white text-weight-bolder q-mt-none q-mb-xs">{{ $t('auth.loginTitle') }}</h2>
+        <p class="text-subtitle2 text-grey-5">{{ $t('auth.loginSubtitle') }}</p>
       </div>
 
       <!-- Login Form Card -->
@@ -87,7 +87,7 @@ const handleLogin = async () => {
             <q-input
               v-model="password"
               :type="showPassword ? 'text' : 'password'"
-              label="Password"
+              :label="$t('common.password')"
               label-color="indigo-3"
               dark
               outlined

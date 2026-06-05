@@ -82,8 +82,8 @@ onMounted(() => {
     <!-- Title -->
     <div class="row items-center justify-between q-mb-xl">
       <div>
-        <h4 class="text-h4 text-white text-weight-bolder q-mt-none q-mb-xs">Administration Dashboard</h4>
-        <p class="text-subtitle1 text-grey-5 text-weight-light">Real-time system telemetry and transaction auditing</p>
+        <h4 class="text-h4 text-white text-weight-bolder q-mt-none q-mb-xs">{{ $t('adminDashboard.title') }}</h4>
+        <p class="text-subtitle1 text-grey-5 text-weight-light">{{ $t('adminDashboard.subtitle') }}</p>
       </div>
       <q-btn flat round color="white" icon="refresh" @click="loadDashboard" :loading="loading" />
     </div>
@@ -96,7 +96,7 @@ onMounted(() => {
         <q-card class="glass-card hover-scale">
           <q-card-section class="q-pa-md text-center">
             <q-icon name="people" size="32px" color="primary" class="q-mb-sm" />
-            <div class="text-caption text-grey-5 text-uppercase letter-spacing-1 font-mono">Total Users</div>
+            <div class="text-caption text-grey-5 text-uppercase letter-spacing-1 font-mono">{{ $t('adminDashboard.totalUsers') }}</div>
             <div class="text-h4 text-weight-bolder text-white q-mt-xs">
               {{ adminStore.dashboardStats.totalUsers }}
             </div>
@@ -109,7 +109,7 @@ onMounted(() => {
         <q-card class="glass-card hover-scale">
           <q-card-section class="q-pa-md text-center">
             <q-icon name="wallet" size="32px" color="emerald-4" class="q-mb-sm" />
-            <div class="text-caption text-grey-5 text-uppercase letter-spacing-1 font-mono">Total Wallets</div>
+            <div class="text-caption text-grey-5 text-uppercase letter-spacing-1 font-mono">{{ $t('adminDashboard.totalWallets') }}</div>
             <div class="text-h4 text-weight-bolder text-white q-mt-xs">
               {{ adminStore.dashboardStats.totalWallets }}
             </div>
@@ -122,7 +122,7 @@ onMounted(() => {
         <q-card class="glass-card hover-scale">
           <q-card-section class="q-pa-md text-center">
             <q-icon name="payments" size="32px" color="secondary" class="q-mb-sm" />
-            <div class="text-caption text-grey-5 text-uppercase letter-spacing-1 font-mono">Total Volume</div>
+            <div class="text-caption text-grey-5 text-uppercase letter-spacing-1 font-mono">{{ $t('adminDashboard.totalVolume') }}</div>
             <div class="text-h5 text-weight-bolder text-white q-mt-sm">
               {{ adminStore.dashboardStats.totalTransactionVolume.toFixed(3) }}
               <span class="text-caption text-indigo-3">LYD</span>
@@ -136,7 +136,7 @@ onMounted(() => {
         <q-card class="glass-card hover-scale">
           <q-card-section class="q-pa-md text-center">
             <q-icon name="trending_up" size="32px" color="accent" class="q-mb-sm" />
-            <div class="text-caption text-grey-5 text-uppercase letter-spacing-1 font-mono">Today's Volume</div>
+            <div class="text-caption text-grey-5 text-uppercase letter-spacing-1 font-mono">{{ $t('adminDashboard.todayVolume') }}</div>
             <div class="text-h5 text-weight-bolder text-white q-mt-sm">
               {{ adminStore.dashboardStats.todayTransactionVolume.toFixed(3) }}
               <span class="text-caption text-indigo-3">LYD</span>
@@ -155,7 +155,7 @@ onMounted(() => {
         <q-card class="glass-card fit q-pa-md">
           <q-card-section class="q-pa-none">
             <div class="text-subtitle2 text-indigo-3 font-mono text-uppercase text-weight-bold letter-spacing-1 q-mb-lg">
-              Wallet Status Ratio
+              {{ $t('adminDashboard.walletStatusRatio') }}
             </div>
             <div class="row justify-center">
               <apexchart
@@ -174,7 +174,7 @@ onMounted(() => {
         <q-card class="glass-card fit">
           <q-card-section class="row items-center justify-between q-pa-md">
             <div class="text-subtitle2 text-indigo-3 font-mono text-uppercase text-weight-bold letter-spacing-1">
-              Global Platform Activity
+              {{ $t('adminDashboard.globalActivity') }}
             </div>
             <q-btn
               flat
@@ -206,10 +206,10 @@ onMounted(() => {
 
                   <q-item-section class="gt-xs text-grey-4">
                     <div v-if="tx.fromWalletNumber" class="text-caption">
-                      From: <span class="font-mono text-indigo-3">{{ tx.fromWalletNumber }}</span>
+                      {{ $t('common.from') }}: <span class="font-mono text-indigo-3">{{ tx.fromWalletNumber }}</span>
                     </div>
                     <div v-if="tx.toWalletNumber" class="text-caption">
-                      To: <span class="font-mono text-emerald-4">{{ tx.toWalletNumber }}</span>
+                      {{ $t('common.to') }}: <span class="font-mono text-emerald-4">{{ tx.toWalletNumber }}</span>
                     </div>
                   </q-item-section>
 
@@ -222,7 +222,7 @@ onMounted(() => {
               </template>
             </q-list>
             <div class="text-center q-pa-xl text-grey-5" v-else>
-              No system transactions recorded.
+              {{ $t('adminDashboard.noTx') }}
             </div>
           </q-card-section>
         </q-card>
@@ -233,7 +233,7 @@ onMounted(() => {
     <!-- Loading spinner -->
     <div class="text-center q-pa-xl" v-else>
       <q-spinner color="primary" size="48px" class="q-my-xl" />
-      <div class="text-grey-5">Loading dashboard telemetry...</div>
+      <div class="text-grey-5">{{ $t('adminDashboard.loading') }}</div>
     </div>
 
   </q-page>

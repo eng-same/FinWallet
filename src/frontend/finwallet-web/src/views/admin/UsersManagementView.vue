@@ -33,8 +33,8 @@ onMounted(() => {
     
     <div class="row items-center justify-between q-mb-xl">
       <div>
-        <h4 class="text-h4 text-white text-weight-bolder q-mt-none q-mb-xs">User Management</h4>
-        <p class="text-subtitle1 text-grey-5 text-weight-light">Monitor platform registrants and access detail states</p>
+        <h4 class="text-h4 text-white text-weight-bolder q-mt-none q-mb-xs">{{ $t('adminUsers.title') }}</h4>
+        <p class="text-subtitle1 text-grey-5 text-weight-light">{{ $t('adminUsers.subtitle') }}</p>
       </div>
       <q-btn flat round color="white" icon="refresh" @click="loadUsers" />
     </div>
@@ -45,7 +45,7 @@ onMounted(() => {
         <div class="col-12 col-sm-6">
           <q-input
             v-model="searchVal"
-            label="Search by Name / Email / Phone"
+            :label="$t('adminUsers.search')"
             label-color="indigo-3"
             dark
             outlined
@@ -86,8 +86,8 @@ onMounted(() => {
             <q-separator class="bg-grey-9 q-my-sm" />
 
             <div class="text-left text-caption text-grey-5">
-              <div>Phone: <span class="text-grey-3 text-weight-bold">{{ user.phoneNumber }}</span></div>
-              <div>Registered: <span class="text-grey-3">{{ formatDate(user.createdAt) }}</span></div>
+              <div>{{ $t('common.phone') }}: <span class="text-grey-3 text-weight-bold">{{ user.phoneNumber }}</span></div>
+              <div>{{ $t('adminUsers.registered') }}: <span class="text-grey-3">{{ formatDate(user.createdAt) }}</span></div>
             </div>
 
           </q-card-section>
@@ -97,14 +97,14 @@ onMounted(() => {
       <!-- No users state -->
       <div class="col-12 text-center q-pa-xl text-grey-5" v-if="adminStore.users.length === 0">
         <q-icon name="group_off" size="64px" class="q-mb-md" />
-        <div>No matching users found in the system.</div>
+        <div>{{ $t('adminUsers.noUsers') }}</div>
       </div>
     </div>
 
     <!-- Loader -->
     <div class="text-center q-pa-xl" v-else>
       <q-spinner color="primary" size="48px" />
-      <div class="text-grey-5 q-mt-md">Querying users...</div>
+      <div class="text-grey-5 q-mt-md">{{ $t('adminUsers.loading') }}</div>
     </div>
 
   </q-page>

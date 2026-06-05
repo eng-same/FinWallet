@@ -316,7 +316,7 @@ const handleTopUpSubmit = async () => {
                 outlined
                 rows="3"
                 class="topup-field"
-                :placeholder="locale === 'en' ? 'Provide a bank top-up memo' : 'أدخل بياناً لعملية شحن الرصيد'"
+                :placeholder="$t('send.memo')"
               >
                 <template v-slot:prepend>
                   <q-icon name="description" color="indigo-4" />
