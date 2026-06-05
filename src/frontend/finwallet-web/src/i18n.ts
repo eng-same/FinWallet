@@ -102,7 +102,19 @@ const messages = {
       amount: 'Amount (LYD)',
       authBtn: 'Authorize Top-Up',
       submitting: 'Submitting request...',
-      pendingAlert: 'Top-up request is pending bank approval. Please wait.'
+      pendingAlert: 'Top-up request is pending bank approval. Please wait.',
+      methodCard: 'Card Payment',
+      methodBank: 'Bank Transfer',
+      methodOnePay: 'onePay Transfer',
+      methodLyPay: 'LyPay Transfer',
+      accountNumber: 'Account Number (15 Digits)',
+      onePayId: 'onePay Account Number',
+      lyPayIban: 'LyPay IBAN (25 Digits)',
+      bankNumberHint: 'Enter 15-digit bank account number',
+      onePayHint: 'Enter registered onePay account number',
+      lyPayHint: 'Enter 25-character Libyan IBAN starting with LY',
+      mockSuccessTitle: 'Simulated Top-Up Successful',
+      mockSuccessMessage: 'Your simulated top-up has been successfully processed! Note: This option runs on frontend mockup mode and does not modify the backend database.'
     }
   },
   ar: {
@@ -206,7 +218,19 @@ const messages = {
       amount: 'المبلغ (د.ل)',
       authBtn: 'تفويض الشحن',
       submitting: 'جاري إرسال الطلب...',
-      pendingAlert: 'طلب الشحن قيد انتظار موافقة البنك. يرجى الانتظار.'
+      pendingAlert: 'طلب الشحن قيد انتظار موافقة البنك. يرجى الانتظار.',
+      methodCard: 'الدفع بالبطاقة',
+      methodBank: 'تحويل مصرفي',
+      methodOnePay: 'تحويل ون باي',
+      methodLyPay: 'تحويل لي باي',
+      accountNumber: 'رقم الحساب (15 خانة)',
+      onePayId: 'رقم حساب ون باي',
+      lyPayIban: 'رقم الآيبان لي باي (25 خانة)',
+      bankNumberHint: 'أدخل رقم الحساب المكون من 15 خانة',
+      onePayHint: 'أدخل رقم حساب ون باي المسجل',
+      lyPayHint: 'أدخل رقم الآيبان الليبي المكون من 25 خانة ويبدأ بـ LY',
+      mockSuccessTitle: 'تم الشحن الافتراضي بنجاح',
+      mockSuccessMessage: 'لقد تم محاكاة عملية شحن الرصيد بنجاح! ملاحظة: هذا الخيار يعمل بنمط المحاكاة في الواجهة الأمامية ولا يعدل قاعدة بيانات النظام الخلفية.'
     }
   }
 };
