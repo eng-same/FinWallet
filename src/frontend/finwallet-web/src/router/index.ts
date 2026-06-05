@@ -174,11 +174,6 @@ router.beforeEach(async (to, _from, next) => {
     }
 
     if (requiredRole === 'User' && userRole !== 'User') {
-      // Admin should be allowed to view user dashboard if they navigate there, or we redirect them back
-      if (userRole === 'Admin') {
-        // Allow Admin to view User pages (very standard for diagnostic purposes)
-        return next();
-      }
       return next('/unauthorized');
     }
   }

@@ -59,7 +59,8 @@ const adminNavs = [
   { labelKey: 'menu.manageUsers', icon: 'people', path: '/admin/users' },
   { labelKey: 'menu.manageWallets', icon: 'wallet', path: '/admin/wallets' },
   { labelKey: 'menu.systemTransactions', icon: 'list_alt', path: '/admin/transactions' },
-  { labelKey: 'menu.auditLogs', icon: 'security', path: '/admin/audit-logs' }
+  { labelKey: 'menu.auditLogs', icon: 'security', path: '/admin/audit-logs' },
+  { labelKey: 'menu.profile', icon: 'person', path: '/profile' }
 ];
 
 onMounted(() => {
@@ -132,12 +133,11 @@ onMounted(() => {
         </div>
 
         <q-list class="q-mt-md">
-          <q-item-label header class="text-weight-bold text-indigo-3 text-uppercase font-mono text-caption">
-            {{ $t('menu.navigation') }}
-          </q-item-label>
-
           <!-- User Nav Link list -->
-          <template v-if="authStore.isUser || authStore.role === 'Admin'">
+          <template v-if="!authStore.isAdmin">
+            <q-item-label header class="text-weight-bold text-indigo-3 text-uppercase font-mono text-caption">
+              {{ $t('menu.navigation') }}
+            </q-item-label>
             <q-item
               v-for="nav in userNavs"
               :key="nav.path"
@@ -156,8 +156,6 @@ onMounted(() => {
               </q-item-section>
             </q-item>
           </template>
-
-          <q-separator class="q-my-md bg-grey-9" v-if="authStore.isAdmin" />
 
           <!-- Admin Nav Link list -->
           <template v-if="authStore.isAdmin">
