@@ -199,11 +199,54 @@ onMounted(() => {
 /* Custom Global Styles for Premium Glassmorphism Look */
 body {
   background-color: #0B0F19 !important;
-  font-family: 'Outfit', 'Inter', -apple-system, sans-serif !important;
 }
 
-.font-sans {
-  font-family: 'Outfit', 'Inter', -apple-system, sans-serif !important;
+/* English (LTR) Typography */
+html:not([dir="rtl"]) body,
+html:not([dir="rtl"]) .font-sans,
+html:not([dir="rtl"]) .q-field,
+html:not([dir="rtl"]) .q-btn,
+html:not([dir="rtl"]) .q-item {
+  font-family: 'Inter', -apple-system, sans-serif !important;
+}
+
+html:not([dir="rtl"]) h1,
+html:not([dir="rtl"]) h2,
+html:not([dir="rtl"]) h3,
+html:not([dir="rtl"]) h4,
+html:not([dir="rtl"]) h5,
+html:not([dir="rtl"]) h6,
+html:not([dir="rtl"]) .text-h1,
+html:not([dir="rtl"]) .text-h2,
+html:not([dir="rtl"]) .text-h3,
+html:not([dir="rtl"]) .text-h4,
+html:not([dir="rtl"]) .text-h5,
+html:not([dir="rtl"]) .text-h6,
+html:not([dir="rtl"]) .q-toolbar-title {
+  font-family: 'Outfit', -apple-system, sans-serif !important;
+}
+
+/* Arabic (RTL) Typography */
+html[dir="rtl"] body,
+html[dir="rtl"] .font-sans,
+html[dir="rtl"] h1,
+html[dir="rtl"] h2,
+html[dir="rtl"] h3,
+html[dir="rtl"] h4,
+html[dir="rtl"] h5,
+html[dir="rtl"] h6,
+html[dir="rtl"] .text-h1,
+html[dir="rtl"] .text-h2,
+html[dir="rtl"] .text-h3,
+html[dir="rtl"] .text-h4,
+html[dir="rtl"] .text-h5,
+html[dir="rtl"] .text-h6,
+html[dir="rtl"] .q-btn,
+html[dir="rtl"] .q-item,
+html[dir="rtl"] .q-field,
+html[dir="rtl"] .q-toolbar-title,
+html[dir="rtl"] .q-tooltip {
+  font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif !important;
 }
 
 .border-bottom {
