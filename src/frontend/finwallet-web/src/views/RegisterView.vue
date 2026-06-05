@@ -71,7 +71,7 @@ const handleRegister = async () => {
           <q-icon name="account_balance_wallet" size="32px" color="white" />
         </q-avatar>
         <h2 class="text-h4 text-white text-weight-bolder q-mt-none q-mb-xs">Create Account</h2>
-        <p class="text-subtitle2 text-grey-5">Get a simulated wallet automatically</p>
+        <p class="text-subtitle2 text-grey-5">Get a digital wallet automatically</p>
       </div>
 
       <!-- Card Form -->

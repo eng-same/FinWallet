@@ -79,7 +79,7 @@ onMounted(() => {
       <q-toolbar>
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
         <q-toolbar-title class="text-weight-bold letter-spacing-1">
-          FinWallet <span class="text-caption text-indigo-3 font-mono">Simulation</span>
+          FinWallet <span class="text-caption text-indigo-3 font-mono">Platform</span>
         </q-toolbar-title>
 
         <q-space />

@@ -75,7 +75,7 @@ onMounted(() => {
           @click="() => loadDetails()"
           v-if="txDetails?.transaction?.status === 'PendingBankApproval'"
         >
-          <q-tooltip>Refresh status from Mock Bank response</q-tooltip>
+          <q-tooltip>Refresh status from Bank response</q-tooltip>
         </q-btn>
       </div>
 

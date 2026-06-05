@@ -61,7 +61,7 @@ const handleLogin = async () => {
           <q-icon name="account_balance_wallet" size="32px" color="white" />
         </q-avatar>
         <h2 class="text-h4 text-white text-weight-bolder q-mt-none q-mb-xs">Sign In</h2>
-        <p class="text-subtitle2 text-grey-5">Access your simulated wallet system</p>
+        <p class="text-subtitle2 text-grey-5">Access your digital wallet system</p>
       </div>
 
       <!-- Login Form Card -->

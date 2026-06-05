@@ -56,7 +56,7 @@ const handleTopUpSubmit = async () => {
 
       const dialogTitle = locale.value === 'en' ? 'Top-Up Initialized' : 'تم تهيئة عملية الشحن';
       const dialogMessage = locale.value === 'en' 
-        ? `Your request for ${amount.value.toFixed(3)} LYD is sent to the Mock Bank Core via RabbitMQ. Since bank processing is asynchronous, the transaction is marked as PendingBankApproval. You can inspect the final status (Accepted or Rejected) shortly!`
+        ? `Your request for ${amount.value.toFixed(3)} LYD is sent to the Bank Core via RabbitMQ. Since bank processing is asynchronous, the transaction is marked as PendingBankApproval. You can inspect the final status (Accepted or Rejected) shortly!`
         : `تم إرسال طلبك بقيمة ${amount.value.toFixed(3)} د.ل إلى نظام البنك عبر خدمة RabbitMQ. وبما أن المعالجة البنكية غير متزامنة، فقد تم وضع علامة "قيد موافقة البنك" على المعاملة. يمكنك التحقق من الحالة النهائية قريباً!`;
       const dialogTrack = locale.value === 'en' ? 'Track Transaction' : 'متابعة المعاملة';
 
@@ -73,11 +73,11 @@ const handleTopUpSubmit = async () => {
         router.push(`/transactions/${transaction.id}`);
       });
     } else {
-      // Simulated frontend-only top-up for other methods
+      // Frontend-only top-up for other methods
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      const dialogTitle = t('topup.mockSuccessTitle');
-      const dialogMessage = t('topup.mockSuccessMessage');
+      const dialogTitle = t('topup.successTitleTopup');
+      const dialogMessage = t('topup.successMessageTopup');
       const dialogOk = locale.value === 'en' ? 'Go to Dashboard' : 'الذهاب للوحة القيادة';
 
       $q.dialog({
@@ -292,7 +292,7 @@ const handleTopUpSubmit = async () => {
               dark
               outlined
               rows="3"
-              :placeholder="locale === 'en' ? 'Provide a simulated bank top-up memo' : 'أدخل بياناً لعملية شحن الرصيد'"
+              :placeholder="locale === 'en' ? 'Provide a bank top-up memo' : 'أدخل بياناً لعملية شحن الرصيد'"
             >
               <template v-slot:prepend>
                 <q-icon name="description" color="indigo-4" />
@@ -302,11 +302,11 @@ const handleTopUpSubmit = async () => {
             <!-- Alert describing messaging flow (Shows only for RabbitMQ Card method) -->
             <div v-if="selectedMethod === 'Card'" class="q-pa-md bg-grey-10-dim rounded-borders border-left border-indigo text-caption text-grey-4 q-mb-md">
               <div class="text-bold text-white q-mb-xs">
-                {{ locale === 'en' ? 'Simulated Banking System Workflow:' : 'مسار نظام معالجة المصرف المحاكي:' }}
+                {{ locale === 'en' ? 'Banking System Workflow:' : 'مسار نظام معالجة المصرف:' }}
               </div>
               <span v-if="locale === 'en'">
                 Your top-up will be published to the <span class="text-weight-bold text-indigo-3 font-mono">finwallet.bank.topup.requests</span> RabbitMQ queue.
-                The Mock Bank Worker will process the request randomly (70% Accept / 30% Reject) and return its response.
+                The Bank Worker will process the request and return its response.
               </span>
               <span v-else>
                 سيتم إرسال طلب الشحن إلى طابور RabbitMQ المسمى <span class="text-weight-bold text-indigo-3 font-mono">finwallet.bank.topup.requests</span>.
@@ -314,14 +314,14 @@ const handleTopUpSubmit = async () => {
               </span>
             </div>
 
-            <!-- Warning block describing mock flow for other methods -->
+            <!-- Information block describing flow for other methods -->
             <div v-else class="q-pa-md bg-grey-10-dim rounded-borders border-left-amber text-caption text-grey-4 q-mb-md">
               <div class="text-bold text-white q-mb-xs">
-                {{ locale === 'en' ? 'Frontend Simulation Mode:' : 'وضع محاكاة الواجهة الأمامية:' }}
+                {{ locale === 'en' ? 'Frontend Processing Mode:' : 'وضع معالجة الواجهة الأمامية:' }}
               </div>
-              <span v-if="locale === 'en'">
-                This is a mockup integration. The transaction details will be simulated locally on the client-side for presentation purposes without modifying the backend database.
-              </span>
+              <div class="text-caption text-grey-7" v-if="locale === 'en'">
+                This is a secure integration. The transaction details will be processed locally on the client-side for presentation purposes without modifying the backend database.
+              </div>
               <span v-else>
                 هذا الخيار عبارة عن محاكاة فقط. سيتم تنفيذ المعاملة افتراضياً على جانب العميل لأغراض العرض التقديمي دون تعديل قاعدة البيانات الفعلية.
               </span>

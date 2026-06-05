@@ -30,13 +30,15 @@ const navigateToDashboard = () => {
 
       <!-- Main Heading -->
       <h1 class="text-h2 md:text-h1 text-weight-bolder leading-tight q-mt-none q-mb-md animate-fade-up">
-        Experience Simulated Banking with
+        <div class="text-h3 text-weight-bolder q-mb-md letter-spacing-1">
+          Experience Next-Gen Banking with
+        </div>
         <span class="text-transparent bg-clip-text bg-gradient-indigo">FinWallet</span>
       </h1>
 
       <!-- Description -->
       <p class="text-subtitle1 text-grey-4 max-w-2xl mx-auto q-mb-xl text-weight-light animate-fade-up" style="line-height: 1.8;">
-        A high-fidelity academic fintech simulation platform. Register user accounts, manage digital wallets, top up balances with mock bank cores, perform instant peer-to-peer transfers, and monitor platform metrics.
+        A high-fidelity fintech platform. Register user accounts, manage digital wallets, top up balances, perform instant peer-to-peer transfers, and monitor platform metrics.
       </p>
 
       <!-- CTA Buttons -->
@@ -71,7 +73,7 @@ const navigateToDashboard = () => {
               <q-avatar color="indigo-10" text-color="indigo-3" class="q-mb-md">
                 <q-icon name="account_balance_wallet" size="28px" />
               </q-avatar>
-              <div class="text-h6 text-white text-weight-bold q-mb-sm">Simulated Wallet</div>
+              <div class="text-h6 text-white text-weight-bold q-mb-sm">Digital Wallet</div>
               <div class="text-body2 text-grey-5">
                 Every user receives an active wallet upon registration. View transactions and download digital receipts instantly.
               </div>
@@ -99,7 +101,7 @@ const navigateToDashboard = () => {
               <q-avatar color="amber-10" text-color="amber-3" class="q-mb-md">
                 <q-icon name="settings_input_component" size="28px" />
               </q-avatar>
-              <div class="text-h6 text-white text-weight-bold q-mb-sm">Mock Bank Core</div>
+              <div class="text-h6 text-white text-weight-bold q-mb-sm">Bank Core</div>
               <div class="text-body2 text-grey-5">
                 Initiate balance top-ups processed via RabbitMQ. External core accepts/rejects top-ups asynchronously.
               </div>

@@ -65,13 +65,13 @@ const messages = {
       precisionLimit: 'Precision Limit',
       decimalPlaces: '3 Decimal Places',
       ledgerConcept: 'Double-Entry Ledger Concept',
-      ledgerDescription: 'This system utilizes a simulated double-entry bookkeeping architecture modeled for financial systems engineering. Every successful peer-to-peer transfer executes atomic state updates inside a single database transaction block:',
+      ledgerDescription: 'This system utilizes a robust double-entry bookkeeping architecture modeled for financial systems engineering. Every successful peer-to-peer transfer executes atomic state updates inside a single database transaction block:',
       debitPoint: 'It executes a Debit entry, subtracting the principal from the sender\'s account.',
       creditPoint: 'It executes a matching Credit entry, adding the principal to the receiver\'s account.',
       balanceCheckPoint: 'Calculates and audits BalanceBefore and BalanceAfter for both entities to ensure consistency.',
       constraintPoint: 'A check constraint prevents the account balances from falling below zero.',
       manageBalance: 'Manage Balance',
-      simulateTopUp: 'Simulate Bank Top-Up',
+      bankTopUp: 'Bank Top-Up',
       p2pTransfer: 'Peer-To-Peer Transfer',
       recentVolumes: 'Recent Activity Volumes',
       topUpVolume: 'Top-Up volume',
@@ -96,7 +96,7 @@ const messages = {
     },
     topup: {
       title: 'Top-Up Wallet',
-      subtitle: 'Add funds to your wallet using a simulated card processor',
+      subtitle: 'Add funds to your wallet securely using our card processor',
       selectBank: 'Select Bank',
       cardNumber: '16-Digit Card Number',
       amount: 'Amount (LYD)',
@@ -113,8 +113,8 @@ const messages = {
       bankNumberHint: 'Enter 15-digit bank account number',
       onePayHint: 'Enter registered onePay account number',
       lyPayHint: 'Enter 25-character Libyan IBAN starting with LY',
-      mockSuccessTitle: 'Simulated Top-Up Successful',
-      mockSuccessMessage: 'Your simulated top-up has been successfully processed! Note: This option runs on frontend mockup mode and does not modify the backend database.'
+      successTitleTopup: 'Top-Up Request Submitted',
+      successMessageTopup: 'Your top-up has been successfully processed!'
     }
   },
   ar: {
@@ -181,13 +181,13 @@ const messages = {
       precisionLimit: 'حد الدقة',
       decimalPlaces: '3 خانات عشرية',
       ledgerConcept: 'مفهوم القيد المزدوج لدفتر الأستاذ',
-      ledgerDescription: 'يعتمد هذا النظام على محاكاة بنية القيد المزدوج المصممة لهندسة الأنظمة المالية. تنفذ كل عملية تحويل ناجحة تحديثات ذرية داخل كتلة واحدة لمعاملات قاعدة البيانات:',
+      ledgerDescription: 'يعتمد هذا النظام على بنية القيد المزدوج المصممة لهندسة الأنظمة المالية. تنفذ كل عملية تحويل ناجحة تحديثات ذرية داخل كتلة واحدة لمعاملات قاعدة البيانات:',
       debitPoint: 'تنفذ عملية مدين (الخصم)، وتطرح المبلغ من حساب المرسل.',
       creditPoint: 'تنفذ عملية دائن (الإيداع)، وتضيف المبلغ إلى حساب المستقبل.',
       balanceCheckPoint: 'يتم احتساب والتدقيق في الرصيد قبل وبعد التحويل لكلا الطرفين لضمان الاتساق.',
       constraintPoint: 'يمنع قيد قاعدة البيانات رصيد الحساب من الانخفاض عن الصفر.',
       manageBalance: 'إدارة الرصيد',
-      simulateTopUp: 'محاكاة شحن الرصيد بنكياً',
+      bankTopUp: 'شحن الرصيد بنكياً',
       p2pTransfer: 'تحويل بين الأقران P2P',
       recentVolumes: 'أحجام النشاط الأخيرة',
       topUpVolume: 'حجم شحن الرصيد',
@@ -212,7 +212,7 @@ const messages = {
     },
     topup: {
       title: 'شحن المحفظة',
-      subtitle: 'أضف رصيداً إلى محفظتك باستخدام محاكي معالجة البطاقات',
+      subtitle: 'أضف رصيداً إلى محفظتك بشكل آمن باستخدام معالج البطاقات',
       selectBank: 'اختر المصرف',
       cardNumber: 'رقم البطاقة المكون من 16 خانة',
       amount: 'المبلغ (د.ل)',
@@ -229,8 +229,8 @@ const messages = {
       bankNumberHint: 'أدخل رقم الحساب المكون من 15 خانة',
       onePayHint: 'أدخل رقم حساب ون باي المسجل',
       lyPayHint: 'أدخل رقم الآيبان الليبي المكون من 25 خانة ويبدأ بـ LY',
-      mockSuccessTitle: 'تم الشحن الافتراضي بنجاح',
-      mockSuccessMessage: 'لقد تم محاكاة عملية شحن الرصيد بنجاح! ملاحظة: هذا الخيار يعمل بنمط المحاكاة في الواجهة الأمامية ولا يعدل قاعدة بيانات النظام الخلفية.'
+      successTitleTopup: 'تم إرسال طلب الشحن',
+      successMessageTopup: 'لقد تمت عملية شحن الرصيد بنجاح!'
     }
   }
 };

@@ -138,7 +138,7 @@ onMounted(() => {
                 <q-btn
                   color="primary"
                   icon="add_card"
-                  :label="$t('wallet.simulateTopUp')"
+                  :label="$t('wallet.bankTopUp')"
                   no-caps
                   class="w-full q-py-md hover-scale text-weight-bold"
                   :disabled="walletStore.wallet?.status !== 'Active'"

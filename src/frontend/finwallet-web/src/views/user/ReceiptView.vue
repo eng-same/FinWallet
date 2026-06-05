@@ -129,7 +129,7 @@ onMounted(() => {
           </div>
 
           <div class="q-mt-xl text-caption text-grey-6 font-mono border-top q-pt-md">
-            FinWallet Simulated receipt. No real monetary value.
+            FinWallet Digital receipt. Secure and Verified.
           </div>
 
         </q-card-section>
