@@ -3,15 +3,15 @@ services:
     image: postgres:16-alpine
     container_name: finwallet-postgres
     environment:
-      POSTGRES_USER: finwallet_user
-      POSTGRES_PASSWORD: finwallet_password
-      POSTGRES_DB: finwallet_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U finwallet_user -d finwallet_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -22,8 +22,8 @@ services:
     image: rabbitmq:3.13-management-alpine
     container_name: finwallet-rabbitmq
     environment:
-      RABBITMQ_DEFAULT_USER: finwallet_mq_user
-      RABBITMQ_DEFAULT_PASS: finwallet_mq_password
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -44,11 +44,11 @@ services:
     container_name: finwallet-api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Host=finwallet-postgres;Port=5432;Database=finwallet-db;Username=finwallet_user;Password=finwallet_password
+      - ConnectionStrings__DefaultConnection=Host=finwallet-postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
       - RabbitMq__Host=finwallet-rabbitmq
-      - RabbitMq__Username=finwallet_mq_user
-      - RabbitMq__Password=finwallet_mq_password
-      - Jwt__SecretKey=FinWalletSuperSecretJWTKey2026!WithExtraSecurityCharacters
+      - RabbitMq__Username=${RABBITMQ_DEFAULT_USER}
+      - RabbitMq__Password=${RABBITMQ_DEFAULT_PASS}
+      - Jwt__SecretKey=${JWT_SECRET_KEY}
       - Jwt__Issuer=FinWallet.Api
       - Jwt__Audience=FinWallet.Frontend
       - Jwt__AccessTokenExpirationMinutes=120
@@ -70,8 +70,8 @@ services:
     environment:
       - DOTNET_ENVIRONMENT=Development
       - RabbitMq__Host=finwallet-rabbitmq
-      - RabbitMq__Username=finwallet_mq_user
-      - RabbitMq__Password=finwallet_mq_password
+      - RabbitMq__Username=${RABBITMQ_DEFAULT_USER}
+      - RabbitMq__Password=${RABBITMQ_DEFAULT_PASS}
     depends_on:
       finwallet-rabbitmq:
         condition: service_healthy

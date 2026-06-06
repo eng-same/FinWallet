@@ -53,3 +53,4 @@ dist-ssr/
 *.db-shm
 *.db-wal
 .gemini/
+docker/.env
