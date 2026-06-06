@@ -39,7 +39,7 @@ services:
 
   finwallet-api:
     build:
-      context: ./src/backend
+      context: ../src/backend
       dockerfile: FinWallet.Api/Dockerfile
     container_name: finwallet-api
     environment:
@@ -64,7 +64,7 @@ services:
 
   finwallet-mock-bank-core:
     build:
-      context: ./src/backend
+      context: ../src/backend
       dockerfile: FinWallet.MockBankCore.Worker/Dockerfile
     container_name: finwallet-mock-bank-core
     environment:
@@ -80,7 +80,7 @@ services:
 
   finwallet-frontend:
     build:
-      context: ./src/frontend/finwallet-web
+      context: ../src/frontend/finwallet-web
       dockerfile: Dockerfile
     container_name: finwallet-frontend
     ports:

@@ -10,6 +10,7 @@ COPY FinWallet.Infrastructure/FinWallet.Infrastructure.csproj FinWallet.Infrastr
 COPY FinWallet.Contracts/FinWallet.Contracts.csproj FinWallet.Contracts/
 COPY FinWallet.MockBankCore.Worker/FinWallet.MockBankCore.Worker.csproj FinWallet.MockBankCore.Worker/
 COPY FinWallet.Tests/FinWallet.Tests.csproj FinWallet.Tests/
+COPY docker-compose.dcproj ./
 
 RUN dotnet restore FinWallet.slnx
 

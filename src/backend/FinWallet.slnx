@@ -1,4 +1,7 @@
 <Solution>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
   <Project Path="FinWallet.Api/FinWallet.Api.csproj" />
   <Project Path="FinWallet.Application/FinWallet.Application.csproj" />
   <Project Path="FinWallet.Contracts/FinWallet.Contracts.csproj" />
