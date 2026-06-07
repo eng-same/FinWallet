@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const IS_PRODUCTION = true;
-const API_URL = IS_PRODUCTION ? 'http://34.35.119.207:8081' : 'http://localhost:8081';
+// const IS_PRODUCTION = true;
+const API_URL = 'http://34.35.119.207:8081';
 
 const apiClient = axios.create({
   baseURL: API_URL,
