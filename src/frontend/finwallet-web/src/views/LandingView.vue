@@ -25,7 +25,7 @@ const navigateToDashboard = () => {
       <!-- Premium Hero Badge -->
       <q-badge outline color="indigo-4" class="q-py-xs q-px-md text-subtitle2 rounded-borders text-bold q-mb-lg letter-spacing-1 hover-scale animate-fade">
         <q-icon name="stars" class="q-mr-xs" />
-        ACADEMIC FINTECH PROJECT 2026
+       FINTECH PROJECT 2026
       </q-badge>
 
       <!-- Main Heading -->
