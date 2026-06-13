@@ -34,6 +34,9 @@ builder.Services.AddOpenApi();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+// Register distributed tracing (OpenTelemetry → Jaeger)
+builder.Services.AddObservability(builder.Configuration);
+
 // Register exception middleware
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 

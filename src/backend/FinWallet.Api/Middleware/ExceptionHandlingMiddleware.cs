@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.Json;
 using FinWallet.Application.Common.Exceptions;
 using FluentValidation;
@@ -21,6 +22,20 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
         }
         catch (Exception ex)
         {
+            // Record the exception on the current distributed trace span using BCL Activity API
+            var activity = Activity.Current;
+            if (activity is not null)
+            {
+                activity.SetStatus(ActivityStatusCode.Error, ex.Message);
+                var tags = new ActivityTagsCollection
+                {
+                    { "exception.type", ex.GetType().FullName },
+                    { "exception.message", ex.Message },
+                    { "exception.stacktrace", ex.ToString() }
+                };
+                activity.AddEvent(new ActivityEvent("exception", tags: tags));
+            }
+
             _logger.LogError(ex, "An unhandled exception occurred: {Message}", ex.Message);
             await HandleExceptionAsync(context, ex);
         }
