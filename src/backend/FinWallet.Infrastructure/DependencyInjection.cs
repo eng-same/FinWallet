@@ -5,6 +5,7 @@ using FinWallet.Infrastructure.Authentication;
 using FinWallet.Infrastructure.Messaging.Consumers;
 using FinWallet.Infrastructure.Persistence;
 using MassTransit;
+using MassTransit.Logging;
 using FinWallet.Infrastructure.Persistence.Behaviors;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -13,6 +14,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace FinWallet.Infrastructure;
 
@@ -104,6 +107,57 @@ public static class DependencyInjection
                 cfg.ConfigureEndpoints(context);
             });
         });
+
+        return services;
+    }
+
+    /// <summary>
+    /// Registers OpenTelemetry tracing for the API service.
+    /// Tracing is opt-in: set Observability:Enabled=true via config or environment variable.
+    /// The OTLP exporter endpoint is read from Observability:OtlpEndpoint or the standard
+    /// OTEL_EXPORTER_OTLP_ENDPOINT environment variable (SDK reads this automatically).
+    /// </summary>
+    public static IServiceCollection AddObservability(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        Action<TracerProviderBuilder>? configureTracing = null)
+    {
+        var enabled = configuration.GetValue<bool>("Observability:Enabled");
+        if (!enabled)
+            return services;
+
+        var serviceName = configuration["Observability:ServiceName"] ?? "FinWallet.Api";
+        var otlpEndpoint = configuration["Observability:OtlpEndpoint"] ?? "http://localhost:4317";
+
+        services.AddOpenTelemetry()
+            .ConfigureResource(resource => resource
+                .AddService(
+                    serviceName: serviceName,
+                    serviceVersion: typeof(DependencyInjection).Assembly.GetName().Version?.ToString() ?? "1.0.0"))
+            .WithTracing(tracing =>
+            {
+                tracing
+                    .AddAspNetCoreInstrumentation(options =>
+                    {
+                        // Record exceptions that bubble up through the ASP.NET Core pipeline
+                        options.RecordException = true;
+                    })
+                    .AddHttpClientInstrumentation(options =>
+                    {
+                        options.RecordException = true;
+                    })
+                    // EF Core instrumentation: captures db.system, db.name, db.operation spans
+                    .AddEntityFrameworkCoreInstrumentation()
+                    .AddSource(DiagnosticHeaders.DefaultListenerName);
+
+                // Allow callers to add further instrumentation sources (e.g. Worker service)
+                configureTracing?.Invoke(tracing);
+
+                tracing.AddOtlpExporter(otlp =>
+                {
+                    otlp.Endpoint = new Uri(otlpEndpoint);
+                });
+            });
 
         return services;
     }

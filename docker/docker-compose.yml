@@ -37,6 +37,17 @@ services:
     networks:
       - finwallet-network
 
+  finwallet-jaeger:
+    image: jaegertracing/jaeger:2.19.0
+    container_name: finwallet-jaeger
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - "${JAEGER_UI_PORT:-16686}:16686"
+      - "${JAEGER_OTLP_GRPC_PORT:-4317}:4317"
+    networks:
+      - finwallet-network
+
   finwallet-api:
     build:
       context: ../src/backend
@@ -52,6 +63,9 @@ services:
       - Jwt__Issuer=FinWallet.Api
       - Jwt__Audience=FinWallet.Frontend
       - Jwt__AccessTokenExpirationMinutes=120
+      - Observability__Enabled=${OBSERVABILITY_ENABLED:-true}
+      - Observability__ServiceName=FinWallet.Api
+      - Observability__OtlpEndpoint=http://finwallet-jaeger:4317
     ports:
       - "8081:8080"
     depends_on:
@@ -59,6 +73,8 @@ services:
         condition: service_healthy
       finwallet-rabbitmq:
         condition: service_healthy
+      finwallet-jaeger:
+        condition: service_started
     networks:
       - finwallet-network
 
@@ -72,9 +88,14 @@ services:
       - RabbitMq__Host=finwallet-rabbitmq
       - RabbitMq__Username=${RABBITMQ_DEFAULT_USER}
       - RabbitMq__Password=${RABBITMQ_DEFAULT_PASS}
+      - Observability__Enabled=${OBSERVABILITY_ENABLED:-true}
+      - Observability__ServiceName=FinWallet.MockBankCore.Worker
+      - Observability__OtlpEndpoint=http://finwallet-jaeger:4317
     depends_on:
       finwallet-rabbitmq:
         condition: service_healthy
+      finwallet-jaeger:
+        condition: service_started
     networks:
       - finwallet-network
 

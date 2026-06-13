@@ -40,6 +40,7 @@ When running Docker Compose, the following ports are mapped on your host machine
 |---|---|---|---|
 | **9000** | `finwallet-frontend` | Vue 3 client served via Nginx. | [http://localhost:9000](http://localhost:9000) |
 | **8081** | `finwallet-api` | ASP.NET Core REST API. | [http://localhost:8081](http://localhost:8081) |
+| **16686**| `finwallet-jaeger` | Jaeger distributed tracing UI. | [http://localhost:16686](http://localhost:16686) |
 | **15672**| `finwallet-rabbitmq` | RabbitMQ Management Console. | [http://localhost:15672](http://localhost:15672)<br>User: `finwallet_mq_user`<br>Pass: `finwallet_mq_password` |
 | **5432** | `finwallet-postgres` | PostgreSQL Database Server. | Host: `localhost`, Port: `5432`<br>DB: `finwallet_db`<br>User: `finwallet_user`<br>Pass: `finwallet_password` |
 
@@ -75,7 +76,8 @@ university project/
 │   ├── 04-backend-design-and-database-schema.md
 │   ├── 05-uml-text-specification.md
 │   ├── 06-testing-plan.md
-│   └── 07-demo-script.md
+│   ├── 07-demo-script.md
+│   └── 08-observability.md               # OpenTelemetry & Jaeger observability guide
 │
 ├── docker-compose.yml                        # Docker services orchestrator
 ├── docker-compose.override.yml               # Dev overrides configuration
@@ -111,3 +113,12 @@ docker compose down -v
 docker compose up --build
 ```
 The `-v` flag removes the named database volumes to force EF Core's database seeder to run again on clean databases.
+
+---
+
+## 6. Distributed Tracing & Observability
+
+FinWallet includes built-in distributed tracing via OpenTelemetry and Jaeger. Traces are collected automatically when running with Docker Compose.
+
+- **Jaeger UI**: [http://localhost:16686](http://localhost:16686)
+- **Full guide**: [`docs/08-observability.md`](docs/08-observability.md)

@@ -19,7 +19,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontendPolicy", policy =>
     {
-        policy.WithOrigins("http://34.35.119.207:9000")
+        policy.WithOrigins("http://34.35.119.207:9000", "http://localhost:9000")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -33,6 +33,9 @@ builder.Services.AddOpenApi();
 // Register application layers
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+// Register distributed tracing (OpenTelemetry → Jaeger)
+builder.Services.AddObservability(builder.Configuration);
 
 // Register exception middleware
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
