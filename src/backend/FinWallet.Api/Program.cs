@@ -19,7 +19,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontendPolicy", policy =>
     {
-        policy.WithOrigins("http://34.35.119.207:9000", "http://localhost:9000")
+        policy.WithOrigins("http://34.35.133.90:9000", "http://34.35.119.207:9000", "http://localhost:9000")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
