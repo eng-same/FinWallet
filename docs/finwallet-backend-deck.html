@@ -1,0 +1,597 @@
+<title>FinWallet — شرح معماريّة الـ Backend</title>
+<style>
+  :root{
+    --teal:#0E8074; --teal-bright:#12A18F; --gold:#E0A83A; --gold-deep:#C98A1E;
+    --ink:#0E1519; --ink-soft:#33454C;
+    --bg:#E7ECEC; --bg-2:#DCE3E2; --card:#FFFFFF; --card-2:#F3F6F5;
+    --line:#C9D3D2; --muted:#5C6B70;
+    --code-bg:#0F1B20; --code-fg:#D6E2E1;
+    --ck:#5FD3C2; /* keyword */ --ct:#E0A83A; /* type */ --cs:#8FD98A; /* string */
+    --cc:#6E8189; /* comment */ --cm:#9AC7F0; /* member */ --cn:#E58F7B; /* number */
+    --shadow:0 1px 2px rgba(14,21,25,.05), 0 12px 34px rgba(14,21,25,.10);
+    --good:#1F9D6B; --warn:#C98A1E; --bad:#C6553F;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --ink:#E7EEED; --ink-soft:#AFC0C0;
+      --bg:#0B1316; --bg-2:#0E181C; --card:#111E23; --card-2:#0D181C;
+      --line:#22343A; --muted:#8399A0;
+      --teal:#2AB9A5; --teal-bright:#41D3BD; --gold:#E9B54E; --gold-deep:#E0A83A;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 18px 44px rgba(0,0,0,.5);
+      --good:#3FBE86; --warn:#E0A83A; --bad:#E07358;
+    }
+  }
+  :root[data-theme="light"]{
+    --teal:#0E8074; --teal-bright:#12A18F; --gold:#E0A83A;
+    --ink:#0E1519; --ink-soft:#33454C;
+    --bg:#E7ECEC; --bg-2:#DCE3E2; --card:#FFFFFF; --card-2:#F3F6F5;
+    --line:#C9D3D2; --muted:#5C6B70;
+    --shadow:0 1px 2px rgba(14,21,25,.05), 0 12px 34px rgba(14,21,25,.10);
+    --good:#1F9D6B; --warn:#C98A1E; --bad:#C6553F;
+  }
+  :root[data-theme="dark"]{
+    --ink:#E7EEED; --ink-soft:#AFC0C0;
+    --bg:#0B1316; --bg-2:#0E181C; --card:#111E23; --card-2:#0D181C;
+    --line:#22343A; --muted:#8399A0;
+    --teal:#2AB9A5; --teal-bright:#41D3BD; --gold:#E9B54E; --gold-deep:#E0A83A;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 18px 44px rgba(0,0,0,.5);
+    --good:#3FBE86; --warn:#E0A83A; --bad:#E07358;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0}
+  html,body{height:100%}
+  body{
+    background:
+      radial-gradient(1200px 700px at 85% -10%, color-mix(in srgb, var(--teal) 12%, transparent), transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    font-family:"Segoe UI","Noto Sans Arabic","Tahoma",system-ui,-apple-system,sans-serif;
+    direction:rtl;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    overflow:hidden;
+  }
+  .mono{font-family:"Cascadia Code","Consolas","SF Mono","Menlo","Roboto Mono",monospace}
+
+  /* ---------- deck shell ---------- */
+  .deck{height:100vh; width:100vw; position:relative}
+  .slide{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; justify-content:center;
+    padding:clamp(20px,4.5vw,72px);
+    padding-bottom:clamp(64px,8vh,96px);
+    opacity:0; visibility:hidden;
+    transform:translateY(14px);
+    transition:opacity .45s ease, transform .45s ease, visibility .45s;
+    overflow-y:auto;
+  }
+  .slide.active{opacity:1; visibility:visible; transform:none}
+  .slide-inner{width:100%; max-width:1080px; margin:0 auto}
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:.5rem;
+    font-size:.72rem; font-weight:700; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--teal);
+    border:1px solid color-mix(in srgb, var(--teal) 40%, var(--line));
+    background:color-mix(in srgb, var(--teal) 8%, transparent);
+    padding:.34rem .7rem; border-radius:999px; margin-bottom:1.1rem;
+  }
+  .eyebrow .num{color:var(--muted); font-variant-numeric:tabular-nums}
+  h1{font-size:clamp(2rem,5.4vw,4rem); font-weight:800; line-height:1.08; letter-spacing:-.01em; text-wrap:balance}
+  h2{font-size:clamp(1.5rem,3.4vw,2.5rem); font-weight:800; line-height:1.14; letter-spacing:-.01em; text-wrap:balance; margin-bottom:.4rem}
+  h3{font-size:1.06rem; font-weight:700; margin-bottom:.35rem}
+  p{color:var(--ink-soft); font-size:clamp(1rem,1.4vw,1.16rem)}
+  .lead{font-size:clamp(1.05rem,1.7vw,1.35rem); color:var(--ink-soft); max-width:60ch}
+  .accent{color:var(--gold-deep)}
+  strong{color:var(--ink); font-weight:700}
+
+  /* ---------- title slide ---------- */
+  .title-wrap{display:flex; flex-direction:column; gap:1.4rem}
+  .title-meta{display:flex; flex-wrap:wrap; gap:.6rem; margin-top:.6rem}
+  .chip{
+    font-size:.82rem; font-weight:600; color:var(--ink-soft);
+    background:var(--card); border:1px solid var(--line);
+    padding:.42rem .8rem; border-radius:10px; box-shadow:var(--shadow)
+  }
+  .chip b{color:var(--teal)}
+
+  /* ---------- generic grid ---------- */
+  .grid{display:grid; gap:16px; margin-top:1.4rem}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .card{
+    background:var(--card); border:1px solid var(--line);
+    border-radius:16px; padding:1.1rem 1.2rem; box-shadow:var(--shadow)
+  }
+  .card .k{font-size:.72rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--teal); display:block; margin-bottom:.35rem}
+  .card p{font-size:.98rem}
+
+  /* ---------- layered arch diagram ---------- */
+  .layers{display:flex; flex-direction:column; gap:12px; margin-top:1.3rem}
+  .layer{
+    display:flex; align-items:center; gap:1rem;
+    border:1px solid var(--line); border-radius:14px;
+    padding:.85rem 1.1rem; background:var(--card); box-shadow:var(--shadow);
+    position:relative; overflow:hidden;
+  }
+  .layer::before{content:""; position:absolute; inset-inline-start:0; top:0; bottom:0; width:5px; background:var(--lc,var(--teal))}
+  .layer .badge{
+    font-family:"Cascadia Code","Consolas",monospace; font-size:.82rem; font-weight:700;
+    color:#fff; background:var(--lc,var(--teal)); padding:.3rem .6rem; border-radius:8px; white-space:nowrap
+  }
+  .layer .desc{flex:1}
+  .layer .desc b{display:block; font-size:1rem}
+  .layer .desc span{font-size:.9rem; color:var(--muted)}
+  .layer .dep{font-size:.78rem; color:var(--muted); white-space:nowrap}
+
+  /* dependency arrow row */
+  .flowrow{display:flex; align-items:stretch; gap:0; margin-top:1.4rem; flex-wrap:wrap}
+  .node{
+    flex:1; min-width:120px; text-align:center; background:var(--card);
+    border:1px solid var(--line); border-radius:14px; padding:1rem .6rem; box-shadow:var(--shadow)
+  }
+  .node b{display:block; font-family:"Cascadia Code","Consolas",monospace; font-size:.86rem; color:var(--teal)}
+  .node span{font-size:.82rem; color:var(--muted)}
+  .arrow{display:flex; align-items:center; padding:0 .3rem; color:var(--gold-deep); font-size:1.5rem; font-weight:700}
+
+  /* ---------- code block ---------- */
+  .code{
+    direction:ltr; text-align:left;
+    background:var(--code-bg); color:var(--code-fg);
+    border:1px solid color-mix(in srgb, var(--code-bg) 60%, var(--line));
+    border-radius:14px; overflow:auto; box-shadow:var(--shadow);
+    margin-top:1rem;
+  }
+  .code .bar{
+    display:flex; align-items:center; gap:.5rem;
+    padding:.55rem .9rem; border-bottom:1px solid rgba(255,255,255,.08);
+    background:rgba(255,255,255,.03)
+  }
+  .code .bar .dot{width:11px; height:11px; border-radius:50%; background:#3a4a50}
+  .code .bar .file{margin-inline-start:.4rem; font-family:"Cascadia Code","Consolas",monospace; font-size:.78rem; color:#8ba1a8}
+  .code pre{padding:1rem 1.2rem; font-family:"Cascadia Code","Consolas",monospace; font-size:clamp(.76rem,1.05vw,.92rem); line-height:1.7; overflow-x:auto}
+  .code .cap{padding:.55rem .9rem; border-top:1px solid rgba(255,255,255,.08); font-size:.82rem; color:#9db3b9; direction:rtl; text-align:right}
+  .k{color:var(--ck)} .t{color:var(--ct)} .s{color:var(--cs)} .c{color:var(--cc); font-style:italic} .m{color:var(--cm)} .n{color:var(--cn)}
+
+  .split{display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start; margin-top:.6rem}
+  .split .txt{padding-top:.4rem}
+  .note{
+    margin-top:1.1rem; border-inline-start:3px solid var(--gold);
+    background:color-mix(in srgb, var(--gold) 10%, transparent);
+    padding:.7rem 1rem; border-radius:0 10px 10px 0; font-size:.98rem; color:var(--ink-soft)
+  }
+  .note b{color:var(--gold-deep)}
+
+  /* pipeline pills */
+  .pipe{display:flex; align-items:center; flex-wrap:wrap; gap:.5rem; margin-top:1.2rem}
+  .pill{
+    font-family:"Cascadia Code","Consolas",monospace; font-size:.82rem; font-weight:600;
+    padding:.5rem .8rem; border-radius:10px; border:1px solid var(--line); background:var(--card); box-shadow:var(--shadow)
+  }
+  .pill.b{border-color:color-mix(in srgb,var(--teal) 45%,var(--line)); color:var(--teal)}
+  .pill.h{border-color:color-mix(in srgb,var(--gold) 55%,var(--line)); color:var(--gold-deep); font-weight:700}
+  .sep{color:var(--muted)}
+
+  /* table */
+  .tbl{width:100%; border-collapse:collapse; margin-top:1.2rem; font-size:.95rem; background:var(--card); border-radius:14px; overflow:hidden; box-shadow:var(--shadow)}
+  .tbl th,.tbl td{padding:.7rem .9rem; text-align:right; border-bottom:1px solid var(--line)}
+  .tbl th{background:var(--card-2); font-size:.76rem; letter-spacing:.08em; text-transform:uppercase; color:var(--teal); font-weight:700}
+  .tbl tr:last-child td{border-bottom:none}
+  .tbl td b{color:var(--ink)}
+  .tbl .mono{font-family:"Cascadia Code","Consolas",monospace; font-size:.86rem; color:var(--gold-deep); font-weight:600; white-space:nowrap}
+
+  .why{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:1.3rem}
+  .why .row{display:flex; gap:.8rem; align-items:flex-start; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:.9rem 1rem; box-shadow:var(--shadow)}
+  .why .row .ic{font-family:"Cascadia Code",monospace; font-weight:800; color:#fff; background:var(--teal); min-width:34px; height:34px; display:grid; place-items:center; border-radius:9px; font-size:.9rem}
+  .why .row b{font-size:.98rem} .why .row p{font-size:.88rem; margin-top:.1rem}
+
+  /* ---------- chrome: progress, nav, counter ---------- */
+  .rail{position:fixed; top:0; left:0; right:0; height:4px; background:transparent; z-index:40}
+  .rail .fill{height:100%; width:0; background:linear-gradient(90deg,var(--teal),var(--gold)); transition:width .45s ease}
+  .hud{
+    position:fixed; bottom:0; left:0; right:0; height:56px; z-index:40;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 clamp(16px,3vw,40px);
+    background:color-mix(in srgb, var(--bg) 86%, transparent);
+    backdrop-filter:blur(8px); border-top:1px solid var(--line)
+  }
+  .brand{display:flex; align-items:center; gap:.55rem; font-weight:800; font-size:.95rem}
+  .brand .mark{width:22px; height:22px; border-radius:6px; background:linear-gradient(135deg,var(--teal),var(--gold)); display:inline-block}
+  .brand small{font-weight:600; color:var(--muted); font-size:.78rem}
+  .nav{display:flex; align-items:center; gap:.5rem}
+  .nav button{
+    font-family:inherit; font-size:.9rem; font-weight:600; color:var(--ink);
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:.42rem .8rem; cursor:pointer; box-shadow:var(--shadow); transition:transform .12s, border-color .12s
+  }
+  .nav button:hover{border-color:var(--teal); transform:translateY(-1px)}
+  .nav button:focus-visible{outline:2px solid var(--teal); outline-offset:2px}
+  .nav button[disabled]{opacity:.4; cursor:not-allowed; transform:none}
+  .counter{font-variant-numeric:tabular-nums; font-family:"Cascadia Code",monospace; font-size:.85rem; color:var(--muted); min-width:52px; text-align:center}
+  .dots{position:fixed; top:50%; inset-inline-end:14px; transform:translateY(-50%); display:flex; flex-direction:column; gap:9px; z-index:40}
+  .dots button{width:9px; height:9px; padding:0; border-radius:50%; border:none; background:var(--line); cursor:pointer; transition:all .2s}
+  .dots button.on{background:var(--teal); height:22px; border-radius:6px}
+  .hint{position:fixed; bottom:66px; inset-inline-start:50%; transform:translateX(50%); font-size:.78rem; color:var(--muted); z-index:39; opacity:.9; transition:opacity .5s}
+  .hint.hide{opacity:0}
+  kbd{font-family:"Cascadia Code",monospace; font-size:.72rem; background:var(--card); border:1px solid var(--line); border-bottom-width:2px; border-radius:5px; padding:.05rem .35rem; color:var(--ink)}
+
+  .sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0)}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media (max-width:720px){
+    .split,.why{grid-template-columns:1fr}
+    .g2,.g3{grid-template-columns:1fr}
+    .dots{display:none}
+    .layer{flex-wrap:wrap}
+    .layer .dep{width:100%}
+  }
+</style>
+
+<h2 class="sr-only">عرض تقديمي يشرح معماريّة الـ Backend لمشروع FinWallet: البنية الطبقية، وأنماط CQRS وFeature Slices وMediatR، مع أمثلة كود.</h2>
+
+<div class="rail"><div class="fill" id="fill"></div></div>
+
+<div class="deck" id="deck">
+
+  <!-- 1 · TITLE -->
+  <section class="slide active">
+    <div class="slide-inner title-wrap">
+      <span class="eyebrow"><span class="num">مشروع تخرّج</span> · الواجهة الخلفية</span>
+      <h1>معماريّة <span class="accent">FinWallet</span><br>كيف بُني الـ Backend؟</h1>
+      <p class="lead">رحلة داخل الكود: من طلب HTTP بسيط إلى تنفيذ منطق البنك — وشرح للأنماط اللي اخترناها: <strong>Clean Architecture</strong>، و<strong>CQRS</strong>، و<strong>Feature Slices</strong>، و<strong>MediatR</strong>.</p>
+      <div class="title-meta">
+        <span class="chip">مبني على <b>ASP.NET Core (.NET 10)</b></span>
+        <span class="chip"><b>5</b> مشاريع مترابطة</span>
+        <span class="chip">PostgreSQL · RabbitMQ · JWT</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · BIG PICTURE -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow"><span class="num">01</span> · الصورة الكبيرة</span>
+      <h2>ليش قسّمنا المشروع إلى خمسة مشاريع؟</h2>
+      <p class="lead">كل مشروع (Class Library) له مسؤوليّة واحدة واضحة. القاعدة الذهبية: <strong>الكود المهم (قوانين البزنس) لا يعرف شيئًا عن قاعدة البيانات ولا عن الإنترنت.</strong></p>
+      <div class="layers">
+        <div class="layer" style="--lc:#1F9D6B"><span class="badge">Domain</span><div class="desc"><b>القلب — الكيانات والحالات</b><span>Wallet · Transaction · Enums. قوانين خام، بلا تقنية.</span></div><div class="dep">يعتمد على: لا شيء</div></div>
+        <div class="layer" style="--lc:#0E8074"><span class="badge">Application</span><div class="desc"><b>العقل — كل الـ Use Cases</b><span>Commands · Queries · Handlers · Validation · DTOs</span></div><div class="dep">يعتمد على: Domain + Contracts</div></div>
+        <div class="layer" style="--lc:#C98A1E"><span class="badge">Contracts</span><div class="desc"><b>لغة التواصل — رسائل RabbitMQ</b><span>الأحداث المشتركة بين الـ API وخدمة البنك</span></div><div class="dep">يعتمد على: لا شيء</div></div>
+        <div class="layer" style="--lc:#3E6B99"><span class="badge">Infrastructure</span><div class="desc"><b>الأدوات التقنية — التنفيذ الفعلي</b><span>Postgres · JWT · RabbitMQ · OpenTelemetry</span></div><div class="dep">يعتمد على: Domain + Application</div></div>
+        <div class="layer" style="--lc:#C6553F"><span class="badge">Api</span><div class="desc"><b>الواجهة الخارجية — نقطة التشغيل</b><span>Controllers · Program.cs · Middleware</span></div><div class="dep">يعتمد على: Application + Infrastructure</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · DEPENDENCY DIRECTION -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow"><span class="num">02</span> · اتجاه الاعتماديّة</span>
+      <h2>الاعتماديّات دائمًا نحو الداخل</h2>
+      <p class="lead">التفاصيل التقنية تعتمد على البزنس — <strong>وليس العكس</strong>. لو غيّرنا قاعدة البيانات، نعدّل <span class="accent">Infrastructure فقط</span>، ويبقى القلب سليمًا.</p>
+      <div class="flowrow">
+        <div class="node"><b>Api</b><span>الواجهة</span></div>
+        <div class="arrow">←</div>
+        <div class="node"><b>Infrastructure</b><span>التقنية</span></div>
+        <div class="arrow">←</div>
+        <div class="node"><b>Application</b><span>المنطق</span></div>
+        <div class="arrow">←</div>
+        <div class="node" style="border-color:var(--teal)"><b>Domain</b><span>القلب</span></div>
+      </div>
+      <div class="note"><b>الفايدة العملية:</b> الـ Application تعتمد على <span class="mono">IApplicationDbContext</span> (وعد/عقد)، مش على الكلاس الحقيقي. القلب لا يعرف أصلًا أننا نستخدم PostgreSQL — وهذا هو مبدأ <strong>عكس الاعتماديّة (Dependency Inversion)</strong>.</div>
+    </div>
+  </section>
+
+  <!-- 4 · CQRS -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow"><span class="num">03</span> · مفهوم</span>
+      <h2>CQRS — فصل القراءة عن الكتابة</h2>
+      <div class="grid g2">
+        <div class="card" style="border-color:color-mix(in srgb,var(--teal) 40%,var(--line))">
+          <span class="k">Query · استعلام</span>
+          <h3>يقرأ فقط</h3>
+          <p>لا يغيّر أي شيء في الحالة. بسيط وسريع.<br><span class="mono accent">«اعطني رصيد محفظتي»</span></p>
+        </div>
+        <div class="card" style="border-color:color-mix(in srgb,var(--gold) 50%,var(--line))">
+          <span class="k" style="color:var(--gold-deep)">Command · أمر</span>
+          <h3>يغيّر الحالة</h3>
+          <p>يكتب / يعدّل / يحذف. يحتاج تحقّقًا وأمانًا أكثر.<br><span class="mono accent">«اشحن محفظتي»</span></p>
+        </div>
+      </div>
+      <p style="margin-top:1.1rem">هذا الفصل واضح مباشرة في تنظيم المجلدات — كل ميزة تفصل قراءاتها عن أوامرها:</p>
+      <div class="code">
+        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="file">FinWallet.Application/Features/</span></div>
+<pre>Features/Wallets/<span class="k">Queries</span>/    <span class="c">// ← كل القراءات (GetMyWallet, LookupWallet)</span>
+Features/Wallets/<span class="k">Commands</span>/   <span class="c">// ← كل الكتابات (RequestWalletTopUp)</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · FEATURE SLICE -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow"><span class="num">04</span> · مفهوم</span>
+      <h2>Feature Slices — التنظيم حسب الميزة</h2>
+      <div class="split">
+        <div class="txt">
+          <p>بدل تجميع كل الكنترولرات في مجلد وكل الخدمات في مجلد آخر (التنظيم التقليدي حسب <em>النوع التقني</em>)، جمّعنا <strong>كل ما يخص ميزة واحدة</strong> في مكان واحد.</p>
+          <div class="note"><b>الفايدة:</b> تبي تشتغل على المحفظة؟ كل شغلك في مجلد <span class="mono">Wallets/</span>. ما تحتاج تفتح ٦ مجلدات متفرّقة — الميزة «شريحة رأسية» مكتملة بذاتها.</div>
+        </div>
+        <div class="code">
+          <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="file">Features/</span></div>
+<pre><span class="t">Features/</span>
+├── <span class="k">Wallets/</span>     <span class="c">// المحفظة</span>
+├── <span class="k">Transfers/</span>   <span class="c">// التحويلات</span>
+├── <span class="k">Auth/</span>        <span class="c">// الدخول والتسجيل</span>
+└── <span class="k">Admin/</span>       <span class="c">// لوحة الأدمن</span></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · MEDIATOR -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow"><span class="num">05</span> · مفهوم</span>
+      <h2>الوسيط (Mediator) — مكتبة MediatR</h2>
+      <p class="lead">حلقة الوصل بين الكنترولر والمنطق. الكنترولر يقول فقط: «عندي هذا الطلب، وصّله للجهة المسؤولة» — وهو <strong>لا يعرف مَن سينفّذه</strong>.</p>
+      <div class="flowrow">
+        <div class="node" style="border-color:var(--teal)"><b>Controller</b><span>يرسل Request</span></div>
+        <div class="arrow">←</div>
+        <div class="node" style="border-color:var(--gold)"><b>MediatR</b><span>يبحث عن المعالج</span></div>
+        <div class="arrow">←</div>
+        <div class="node"><b>Handler</b><span>ينفّذ المنطق</span></div>
+      </div>
+      <div class="grid g3" style="margin-top:1.2rem">
+        <div class="card"><span class="k">فصل تام</span><p>اللي يطلب لا يعرف اللي ينفّذ.</p></div>
+        <div class="card"><span class="k">كنترولر نحيف</span><p>سطر واحد فعلي، بلا منطق بزنس.</p></div>
+        <div class="card"><span class="k">قابل للاختبار</span><p>نختبر الـ Handler وحده بلا HTTP.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · EXAMPLE: CONTROLLER -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow"><span class="num">06</span> · مثال عملي · الخطوة ١</span>
+      <h2>الكنترولر: مجرّد «بوّاب»</h2>
+      <p>الطلب <span class="mono accent">GET /api/wallets/my-wallet</span> — لاحظ كم هو نحيف: سطر واحد فعلي.</p>
+      <div class="code">
+        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="file">FinWallet.Api/Controllers/WalletsController.cs</span></div>
+<pre><span class="t">[Authorize]</span>
+<span class="k">public sealed class</span> <span class="t">WalletsController</span> : <span class="t">ApiControllerBase</span>
+{
+    <span class="t">[HttpGet(</span><span class="s">"my-wallet"</span><span class="t">)]</span>
+    <span class="k">public async</span> <span class="t">Task&lt;ActionResult&lt;WalletDto&gt;&gt;</span> <span class="m">GetMyWallet</span>()
+    {
+        <span class="c">// ١) يبني الرسالة  ٢) يرسلها للوسيط  ٣) يرجّع النتيجة</span>
+        <span class="k">var</span> result = <span class="k">await</span> <span class="m">Mediator</span>.<span class="m">Send</span>(<span class="k">new</span> <span class="t">GetMyWalletQuery</span>(<span class="m">UserId</span>));
+        <span class="k">return</span> <span class="m">Ok</span>(result);
+    }
+}</pre>
+        <div class="cap">لا يوجد أي منطق بزنس هنا إطلاقًا — هذا مقصود.</div>
+      </div>
+      <div class="note"><b>من أين جاء <span class="mono">UserId</span> و<span class="mono">Mediator</span>؟</b> من الكلاس الأب <span class="mono">ApiControllerBase</span>، الذي يستخرج هوية المستخدم من الـ JWT تلقائيًا ويجلب الوسيط عند الحاجة.</div>
+    </div>
+  </section>
+
+  <!-- 8 · EXAMPLE: QUERY + HANDLER -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow"><span class="num">07</span> · مثال عملي · الخطوة ٢</span>
+      <h2>الرسالة والمعالِج: هنا المنطق الفعلي</h2>
+      <div class="code">
+        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="file">FinWallet.Application/Features/Wallets/Queries/WalletQueries.cs</span></div>
+<pre><span class="c">// ١) الرسالة: مجرّد «طلب» يحمل بيانات، وينتظر ردًّا من نوع WalletDto</span>
+<span class="k">public sealed record</span> <span class="t">GetMyWalletQuery</span>(<span class="t">Guid</span> UserId) : <span class="t">IRequest&lt;WalletDto&gt;</span>;
+
+<span class="c">// ٢) المعالج: MediatR يربطه بالرسالة تلقائيًا</span>
+<span class="k">public sealed class</span> <span class="t">WalletQueriesHandler</span> : <span class="t">IRequestHandler&lt;GetMyWalletQuery, WalletDto&gt;</span>
+{
+    <span class="k">private readonly</span> <span class="t">IApplicationDbContext</span> _db;   <span class="c">// ← Interface، مش الكلاس الحقيقي</span>
+
+    <span class="k">public async</span> <span class="t">Task&lt;WalletDto&gt;</span> <span class="m">Handle</span>(<span class="t">GetMyWalletQuery</span> request, <span class="t">CancellationToken</span> ct)
+    {
+        <span class="k">var</span> wallet = <span class="k">await</span> _db.<span class="m">Wallets</span>
+            .<span class="m">FirstOrDefaultAsync</span>(w =&gt; w.UserId == request.UserId, ct);
+
+        <span class="k">if</span> (wallet == <span class="k">null</span>)
+            <span class="k">throw new</span> <span class="t">FinWalletException</span>(<span class="s">"WALLET_NOT_FOUND"</span>, <span class="s">"Wallet not found."</span>);
+
+        <span class="k">return new</span> <span class="t">WalletDto</span>(wallet.Id, wallet.WalletNumber, wallet.Balance, ...);
+    }
+}</pre>
+      </div>
+      <div class="note"><b>لماذا Interface؟</b> الـ Application تعتمد على «وعد» فقط. الكلاس الحقيقي في Infrastructure — فالقلب لا يعرف تفاصيل قاعدة البيانات.</div>
+    </div>
+  </section>
+
+  <!-- 9 · DTO vs ENTITY -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow"><span class="num">08</span> · مفهوم</span>
+      <h2>لماذا نرجّع <span class="accent">WalletDto</span> وليس <span class="accent">Wallet</span>؟</h2>
+      <div class="split">
+        <div class="txt">
+          <div class="card" style="margin-bottom:12px"><span class="k">Entity</span><h3>Wallet</h3><p>كيان قاعدة البيانات. قد يحمل علاقات داخلية وبيانات حسّاسة لا نريد كشفها للخارج.</p></div>
+          <div class="card" style="border-color:color-mix(in srgb,var(--gold) 45%,var(--line))"><span class="k" style="color:var(--gold-deep)">DTO</span><h3>WalletDto</h3><p>نسخة مصمّمة للعرض الخارجي. نختار بالضبط ماذا نرسل للواجهة الأمامية.</p></div>
+          <p style="margin-top:.9rem"><strong>فصل الشكل الداخلي عن الشكل الخارجي.</strong></p>
+        </div>
+        <div class="code">
+          <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="file">Common/DTOs/DTOs.cs</span></div>
+<pre><span class="k">public record</span> <span class="t">WalletDto</span>(
+    <span class="t">Guid</span>   Id,
+    <span class="t">string</span> WalletNumber,
+    <span class="t">decimal</span> Balance,
+    <span class="t">string</span> Currency,
+    <span class="t">string</span> Status,
+    <span class="t">DateTimeOffset</span> CreatedAt
+);
+<span class="c">// record = غير قابل للتعديل (immutable)</span>
+<span class="c">// يُنشأ مرة، ولا يتغيّر → آمن ونظيف</span></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 · COMMAND + VALIDATION -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow"><span class="num">09</span> · مثال أعقد · التحقّق</span>
+      <h2>الأمر يأتي معه «مُدقّق» تلقائي</h2>
+      <p>مع كل أمر نكتب <span class="mono">Validator</span> بمكتبة <strong>FluentValidation</strong>. لكن مَن يشغّله؟ (الجواب في الشريحة التالية 👈)</p>
+      <div class="code">
+        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="file">Features/Wallets/Commands/RequestWalletTopUpCommand.cs</span></div>
+<pre><span class="k">public sealed record</span> <span class="t">RequestWalletTopUpCommand</span>(
+    <span class="t">Guid</span> UserId, <span class="t">decimal</span> Amount, <span class="t">string</span> Currency, <span class="t">string</span>? Description
+) : <span class="t">IRequest&lt;TransactionDto&gt;</span>;
+
+<span class="k">public sealed class</span> <span class="t">RequestWalletTopUpCommandValidator</span>
+    : <span class="t">AbstractValidator&lt;RequestWalletTopUpCommand&gt;</span>
+{
+    <span class="k">public</span> <span class="m">RequestWalletTopUpCommandValidator</span>()
+    {
+        <span class="m">RuleFor</span>(x =&gt; x.Amount).<span class="m">GreaterThan</span>(<span class="n">0</span>)
+            .<span class="m">WithMessage</span>(<span class="s">"Amount must be greater than zero."</span>);
+        <span class="m">RuleFor</span>(x =&gt; x.Currency).<span class="m">Equal</span>(<span class="s">"LYD"</span>)
+            .<span class="m">WithMessage</span>(<span class="s">"Currency must be LYD."</span>);
+    }
+}</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 · PIPELINE -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow"><span class="num">10</span> · القوّة الحقيقية</span>
+      <h2>خط أنابيب MediatR (Pipeline Behaviors)</h2>
+      <p class="lead">قبل أن يصل الطلب للـ Handler، يمرّ عبر سلسلة «طبقات وسيطة» — نكتبها مرة، وتنطبق على <strong>كل</strong> الأوامر آليًا.</p>
+      <div class="pipe">
+        <span class="pill b">Request</span><span class="sep">→</span>
+        <span class="pill">Logging</span><span class="sep">→</span>
+        <span class="pill">Exception</span><span class="sep">→</span>
+        <span class="pill h">Validation</span><span class="sep">→</span>
+        <span class="pill b">Handler</span><span class="sep">→</span>
+        <span class="pill">Response</span>
+      </div>
+      <div class="code">
+        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="file">Common/Behaviors/ValidationBehavior.cs</span></div>
+<pre><span class="k">public async</span> <span class="t">Task&lt;TResponse&gt;</span> <span class="m">Handle</span>(<span class="t">TRequest</span> request, <span class="t">RequestHandlerDelegate&lt;TResponse&gt;</span> next, ...)
+{
+    <span class="c">// شغّل كل المدقّقات المرتبطة بهذا الطلب</span>
+    <span class="k">if</span> (failures.Count != <span class="n">0</span>)
+        <span class="k">throw new</span> <span class="t">ValidationException</span>(failures);  <span class="c">// ارفض قبل الوصول للـ Handler</span>
+
+    <span class="k">return await</span> <span class="m">next</span>();  <span class="c">// كل شيء تمام؟ كمّل للطبقة التالية</span>
+}</pre>
+      </div>
+      <div class="note"><b>الفايدة الضخمة:</b> الـ Handler الذي يشحن المحفظة <strong>لا يهتم بالتحقّق إطلاقًا</strong> — يصله الطلب مضمونًا أنه صحيح. هذا نمط <em>Cross-Cutting Concerns</em>: صفر تكرار.</div>
+    </div>
+  </section>
+
+  <!-- 12 · PROJECT TABLE -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow"><span class="num">11</span> · مرجع سريع</span>
+      <h2>وظيفة كل مشروع</h2>
+      <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr><th>المشروع</th><th>مسؤوليّته</th><th>أهم المكتبات</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">Domain</td><td><b>القلب.</b> الكيانات والحالات فقط، بلا تقنية.</td><td>Identity.Stores</td></tr>
+          <tr><td class="mono">Application</td><td><b>العقل.</b> Commands · Queries · Validation · DTOs.</td><td>MediatR · FluentValidation</td></tr>
+          <tr><td class="mono">Contracts</td><td><b>لغة التواصل.</b> أحداث RabbitMQ المشتركة.</td><td>—</td></tr>
+          <tr><td class="mono">Infrastructure</td><td><b>الأدوات.</b> DbContext الحقيقي · JWT · الرسائل.</td><td>Npgsql · MassTransit · JwtBearer</td></tr>
+          <tr><td class="mono">Api</td><td><b>الواجهة والمشغّل.</b> Controllers · Program.cs.</td><td>ASP.NET Core · Serilog</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="note"><b>Program.cs</b> هو «لوحة الكهرباء»: يجمع كل القطع في حاوية الـ Dependency Injection — <span class="mono">AddApplication()</span> و<span class="mono">AddInfrastructure()</span> — فيحصل كل Handler على ما يحتاجه تلقائيًا.</div>
+    </div>
+  </section>
+
+  <!-- 13 · WHY / SUMMARY -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow"><span class="num">12</span> · الخلاصة</span>
+      <h2>ليش هذه الطريقة؟ كل نمط يحلّ مشكلة</h2>
+      <div class="why">
+        <div class="row"><span class="ic">CA</span><div><b>Clean Architecture</b><p>البزنس لا يتعلّق بالتقنية → سهل تغيّر قاعدة البيانات أو تختبر بدونها.</p></div></div>
+        <div class="row"><span class="ic">CQ</span><div><b>CQRS</b><p>فصل القراءة عن الكتابة → كل نوع نظيف ومركّز.</p></div></div>
+        <div class="row"><span class="ic">FS</span><div><b>Feature Slices</b><p>كل ميزة في مجلد واحد → سهل تلاقي شغلك وتضيف ميزة.</p></div></div>
+        <div class="row"><span class="ic">MD</span><div><b>MediatR</b><p>فصل الكنترولر عن المنطق → كنترولرات نحيفة وHandlers مستقلّة.</p></div></div>
+        <div class="row"><span class="ic">PB</span><div><b>Pipeline Behaviors</b><p>التحقّق والتسجيل والأخطاء في مكان واحد → صفر تكرار.</p></div></div>
+        <div class="row"><span class="ic">DTO</span><div><b>DTOs</b><p>فصل الشكل الداخلي عن الخارجي → أمان وتحكّم بما يُعرض.</p></div></div>
+      </div>
+      <div class="note" style="border-inline-start-color:var(--teal); background:color-mix(in srgb,var(--teal) 10%, transparent)"><b style="color:var(--teal)">القاعدة الذهبية:</b> كل جزء يعرف أقل شيء ممكن عن غيره. الكنترولر لا يعرف الـ Handler، والـ Handler لا يعرف قاعدة البيانات، والـ Domain لا يعرف أي شيء — وهذا الفصل هو ما يجعل المشروع سهل الصيانة والتوسّع والاختبار.</div>
+    </div>
+  </section>
+
+</div>
+
+<div class="hint" id="hint">استخدم <kbd>→</kbd> <kbd>←</kbd> أو <kbd>مسافة</kbd> للتنقّل</div>
+
+<div class="dots" id="dots"></div>
+
+<div class="hud">
+  <div class="brand"><span class="mark"></span> FinWallet <small>· معماريّة الـ Backend</small></div>
+  <div class="nav">
+    <button id="prev" aria-label="السابق">→ السابق</button>
+    <span class="counter" id="counter">01 / 13</span>
+    <button id="next" aria-label="التالي">التالي ←</button>
+  </div>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let i = 0;
+  const fill = document.getElementById('fill');
+  const counter = document.getElementById('counter');
+  const prev = document.getElementById('prev');
+  const next = document.getElementById('next');
+  const hint = document.getElementById('hint');
+  const dotsWrap = document.getElementById('dots');
+
+  slides.forEach((_, idx) => {
+    const b = document.createElement('button');
+    b.setAttribute('aria-label', 'الشريحة ' + (idx + 1));
+    b.addEventListener('click', () => go(idx));
+    dotsWrap.appendChild(b);
+  });
+  const dots = Array.from(dotsWrap.children);
+  const pad = n => String(n).padStart(2, '0');
+
+  function go(n){
+    i = Math.max(0, Math.min(total - 1, n));
+    slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+    dots.forEach((d, idx) => d.classList.toggle('on', idx === i));
+    fill.style.width = ((i) / (total - 1) * 100) + '%';
+    counter.textContent = pad(i + 1) + ' / ' + pad(total);
+    prev.disabled = i === 0;
+    next.disabled = i === total - 1;
+    slides[i].scrollTop = 0;
+    if (i > 0 && hint) hint.classList.add('hide');
+  }
+  const nextFn = () => go(i + 1);
+  const prevFn = () => go(i - 1);
+  next.addEventListener('click', nextFn);
+  prev.addEventListener('click', prevFn);
+
+  window.addEventListener('keydown', e => {
+    if (['ArrowRight','ArrowUp','PageUp'].includes(e.key)){ e.preventDefault(); prevFn(); }   // RTL: يمين = رجوع
+    else if (['ArrowLeft','ArrowDown','PageDown',' '].includes(e.key)){ e.preventDefault(); nextFn(); }
+    else if (e.key === 'Home'){ go(0); } else if (e.key === 'End'){ go(total - 1); }
+  });
+
+  // touch swipe
+  let sx = 0;
+  document.addEventListener('touchstart', e => sx = e.touches[0].clientX, {passive:true});
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - sx;
+    if (Math.abs(dx) > 55){ dx < 0 ? nextFn() : prevFn(); }   // RTL swipe
+  }, {passive:true});
+
+  go(0);
+</script>
